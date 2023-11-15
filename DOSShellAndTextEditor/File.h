@@ -21,7 +21,7 @@ class File
 	int AvgChPerLine;
 	int NOLines;*/
 public:
-	File(string n, string type , string path , string , Folder* p , bool RO , int priority , int TimeToPrint , time_t CT);
+	File(string n, string type = ".txt", string path = "", string own = "", Folder* p = {}, bool RO = false, int _priority = 0, int TTP = 0, time_t CT = 0);
 	string getName();
 	void setName(string n);
 	void PrintCreationTime();

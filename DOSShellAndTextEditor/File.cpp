@@ -1,6 +1,7 @@
 #include "File.h"
 
-File::File(string n, string type = ".txt", string path = "", string own = "", Folder* p = {}, bool RO = false, int _priority = 0, int TTP = 0, time_t CT = 0)
+File::File(string n, string type, string path, string own, Folder* p, bool RO, int _priority, int TTP, time_t CT)
+
 {
 	this->Name = n;
 	this->FileType = type;
