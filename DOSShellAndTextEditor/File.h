@@ -1,8 +1,10 @@
 #pragma once
 #include<string>
 #include<iostream>
+#include<time.h>
+#include<ctime>
 using namespace std;
-#include"Folder.h"
+class Folder;
 class File
 {
 	string Name;
@@ -13,13 +15,15 @@ class File
 	int Priority;
 	int TimeToPrint;
 	string FileType;
-	double CreationTime;
+	time_t CreationTime;
+	//time_t CreationTime;
 	/*int NOChars;
 	int AvgChPerLine;
 	int NOLines;*/
 public:
-	File(string n, string type = ".txt", string path = "", string own = "", Folder* p = {}, bool RO = false, int priority = 0, int TimeToPrint = 0, double CT = 0);
+	File(string n, string type , string path , string , Folder* p , bool RO , int priority , int TimeToPrint , time_t CT);
 	string getName();
 	void setName(string n);
+	void PrintCreationTime();
 };
 

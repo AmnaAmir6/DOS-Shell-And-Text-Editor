@@ -1,6 +1,6 @@
 #include "File.h"
 
-File::File(string n, string type = ".txt", string path = "", string own = "", Folder* p = {}, bool RO = false, int _priority = 0, int TTP = 0, double CT = 0)
+File::File(string n, string type = ".txt", string path = "", string own = "", Folder* p = {}, bool RO = false, int _priority = 0, int TTP = 0, time_t CT = 0)
 {
 	this->Name = n;
 	this->FileType = type;
@@ -20,4 +20,18 @@ string File::getName()
 void File::setName(string n)
 {
 	Name = n;
+}
+void  File::PrintCreationTime()
+{
+	
+	time(&this->CreationTime);
+
+	struct tm timeInfo;
+	localtime_s(&timeInfo, &CreationTime);
+
+	char timeString[20];
+	strftime(timeString, sizeof(timeString), "%m/%d/%y   %H:%M:%S", &timeInfo);
+
+	cout << " " << timeString;
+
 }
