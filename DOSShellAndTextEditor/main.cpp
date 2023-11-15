@@ -1,8 +1,12 @@
 #include<iostream>
 #include"Folder.h"
 #include<time.h>
+#include<conio.h>
 #include<ctime>
-
+#include<iomanip>
+#include<vector>
+#include <chrono>   // For std::chrono::seconds
+#include <thread>   // F
 using namespace std;
 int main1() {
     
@@ -20,27 +24,28 @@ int main1() {
 #include <ctime>
 
 int main() {
-    // Get the current time point
-    auto currentTimePoint = std::chrono::system_clock::now();
-
-    // Convert the time point to a time_t object
-    std::time_t currentTime = std::chrono::system_clock::to_time_t(currentTimePoint);
-
-    // Convert the time_t to a local time string
-    char timeString[100];
-    struct tm timeInfo;
-
-    // Use std::localtime_s to avoid C4996 warning
-    if (localtime_s(&timeInfo, &currentTime) == 0) {
-        std::strftime(timeString, sizeof(timeString), "%H:%M:%S", &timeInfo);
-
-        // Print the current time
-        std::cout << "Current Time: " << timeString << std::endl;
-    }
-    else {
-        // Handle the error (failed to get local time)
-        std::cerr << "Failed to get local time." << std::endl;
+    
+    vector<Folder*>Folds;
+    time_t c;
+    c = time(0);
+    for (int i = 0; i < 5; i++)
+    {
+        Folder* F;
+       F = new Folder("F1", "ABCD", "abdul", nullptr, false, c);
+        F->PrintCreationTime();
+        cout << endl;
+        std::this_thread::sleep_for(std::chrono::seconds(2));
     }
 
+
+    for(int i=0;i<Folds.size();i++)
+    {
+        Folds[i]->PrintCreationTime();
+        cout << endl;
+    }
+
+    
+    
+    
     return 0;
 }

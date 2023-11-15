@@ -1,12 +1,9 @@
 #include "Folder.h"
-Folder::Folder(string n, string path = "", string own = "", Folder* p = {}, bool hid = false, time_t CT = 0)
+Folder::Folder(string n, string path, string own, Folder* p, bool hid, time_t CT)
+:Name(n),
+Path(path),Owner(own),Parent(p),Hidden(hid),CreationTime(CT)
 {
-	this->Name = n;
-	this->Path = path;
-	this->Owner = own;
-	this->Parent = p;
-	this->Hidden = hid;
-	this->CreationTime = CT;
+	
 
 }
 void Folder::print()//todo
@@ -87,4 +84,8 @@ void  Folder::PrintCreationTime()
 
 	cout << " " << timeString ;
 
+}
+string Folder::GetPath()
+{
+	return Path;
 }

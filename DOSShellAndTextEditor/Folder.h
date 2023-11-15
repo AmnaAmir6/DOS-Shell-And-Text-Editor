@@ -8,6 +8,7 @@
 using namespace std;
 class Folder
 {
+public:
 	string Name;
 	list<Folder*> Folders;
 	list<File*> Files;
@@ -17,7 +18,7 @@ class Folder
 	string Owner;
 	bool Hidden;
 public:
-	Folder(string n, string path , string own , Folder* p , bool hid , time_t CT);
+	Folder(string n = {}, string path = {}, string own = {}, Folder* p = {}, bool hid = false, time_t CT = {});
 	void  PrintCreationTime();
 	void print();
 	void addFile(File* F);
@@ -28,5 +29,6 @@ public:
 	Folder* findFolder(string FN);
 	string getName();
 	void setName(string n);
+	string GetPath();
 };
 
