@@ -85,7 +85,11 @@ void  Folder::PrintCreationTime()
 	cout << " " << timeString ;
 
 }
-string Folder::GetPath()
+string Folder::getPath()
 {
 	return Path;
+}
+Folder* Folder::getParent()
+{
+	return Parent;
 }

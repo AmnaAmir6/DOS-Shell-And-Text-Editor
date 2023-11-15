@@ -29,6 +29,7 @@ public:
 	Folder* findFolder(string FN);
 	string getName();
 	void setName(string n);
-	string GetPath();
+	string getPath();
+	Folder* getParent();
 };
 

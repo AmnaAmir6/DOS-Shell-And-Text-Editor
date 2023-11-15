@@ -13,8 +13,13 @@ public:
 	void insert(Folder*);
 	void Print(string Prompt="\\");
 	bool DoesFileExist(File*);
+	bool DoesFileExist(string f);
 	bool DoesFolderExist(Folder*);
-
-
+	bool DoesFolderExist(string f);
+	Folder* getCurrent();
+	Folder* getRoot();
+	Folder* setCurrent(Folder* F);
+	File* FindFile(string f);
+	Folder* FindFolder(string f);
 };
 
