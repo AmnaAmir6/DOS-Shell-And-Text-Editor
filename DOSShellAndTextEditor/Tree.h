@@ -18,7 +18,7 @@ public:
 	bool DoesFolderExist(string f);
 	Folder* getCurrent();
 	Folder* getRoot();
-	Folder* setCurrent(Folder* F);
+	void setCurrent(Folder* F);
 	File* FindFile(string f);
 	Folder* FindFolder(string f);
 };

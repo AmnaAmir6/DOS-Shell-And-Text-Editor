@@ -25,5 +25,6 @@ public:
 	string getName();
 	void setName(string n);
 	void PrintCreationTime();
+	void print();
 };
 

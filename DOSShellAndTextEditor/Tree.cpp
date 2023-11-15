@@ -17,11 +17,11 @@ void Tree::Print(string Prompt)
 {
 	if(curr_folder->getName()=="V")
 	{ 
-		cout << "V:" << Prompt;
+		cout << "\nV:" << Prompt;
 	}
 	else
 	{
-		cout << "V:" << curr_folder->getPath().substr(2,curr_folder->getPath().length())<<"\\"<<curr_folder->getName()<<Prompt;
+		cout << "\nV:" << curr_folder->getPath().substr(2,curr_folder->getPath().length())<<"\\"<<curr_folder->getName()<<Prompt;
 	}
 
 }
@@ -79,7 +79,7 @@ Folder* Tree::getRoot()
 {
 	return root;
 }
-Folder* Tree::setCurrent(Folder* F)
+void Tree::setCurrent(Folder* F)
 {
 	curr_folder = F;
 }

@@ -15,7 +15,7 @@ void DOS::toLower(string& A)
 
 void DOS::print()
 {
-	cout << UserName << "\t59147\tDSA" << endl;
+	cout << UserName << "  | 59147  |  DSA\n" << endl;
 	T.Print();
 }
 
@@ -40,14 +40,14 @@ bool DOS::Input()
 	if (opr == "attrib")
 	{
 		string FileName = command.substr(3, command.length());
-		if (T.DoesFolderExist(FileName))
-			T.FindFolder(FileName)->print();
+		if (T.DoesFileExist(FileName))
+			T.FindFile(FileName)->print();
 		else
 			cout << "\nInvalid File Name.No such File exists" << endl;
 	}
 	else if (opr == "mkdir")
 	{
-		T.insert(new Folder(command.substr(6, command.length()), T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName(), UserName, T.getCurrent(), false, CurrTime));
+		T.insert(new Folder(command.substr(6, command.length()), (T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName()), UserName, T.getCurrent(), false, CurrTime));
 	}
 	else if (opr == "cd")
 	{
@@ -74,11 +74,11 @@ bool DOS::Input()
 	}
 	else if (opr == "del")
 	{
-		File* F = T.getCurrent()->findFile(command.substr(4, command.length());
+		File* F = T.getCurrent()->findFile(command.substr(4, command.length()));
 		if (F)
 			T.getCurrent()->removeFile(F);
 		else
-			cout << "\nInvalid File Name.No such File exists" << endl;
+			cout << "Invalid File Name.No such File exists" << endl;
 	}
 	else if (opr == "dir" || opr == "cd.")
 	{
@@ -117,6 +117,15 @@ bool DOS::Input()
 	}
 	else
 	{
-		return false;
+		cout << "No such command exists" << endl;
 	}
+
+	if (opr != "cls")
+	{
+		if (prompt)
+			T.Print("$");
+		else
+			T.Print();
+	}
+	return false;
 }

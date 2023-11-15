@@ -36,3 +36,8 @@ void  File::PrintCreationTime()
 	cout << " " << timeString;
 
 }
+
+void File::print()
+{
+
+}

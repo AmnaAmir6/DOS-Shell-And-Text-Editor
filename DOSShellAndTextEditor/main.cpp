@@ -7,23 +7,16 @@
 #include<vector>
 #include <chrono>   // For std::chrono::seconds
 #include <thread>   // F
+#include"DOS.h"
 using namespace std;
-int main1() {
-    
-    //Folder* F;
-
-    //F = new Folder("F1", "ABCD",nullptr ;
-    
-    
-    
-    
+int main()
+{
+    DOS D;
+    D.play();
     return 0;
 }
-#include <iostream>
-#include <chrono>
-#include <ctime>
 
-int main() {
+int main2() {
     
     vector<Folder*>Folds;
     time_t c;
