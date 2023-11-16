@@ -3,7 +3,7 @@ Folder::Folder(string n, string path, string own, Folder* p, bool hid, time_t CT
 :Name(n),
 Path(path),Owner(own),Parent(p),Hidden(hid),CreationTime(CT)
 {
-	
+	time(&this->CreationTime);
 
 }
 void Folder::print()//todo
@@ -13,7 +13,7 @@ void Folder::print()//todo
 	for (auto fl = this->Files.begin(); fl != Files.end(); fl++)
 	{
 		(**fl).PrintCreationTime();
-		cout << "\t" << "     " << "\t\t" << (**fl).getName();
+		cout << "\t" << "     " << "\t\t" << (**fl).getName()<<"." << (**fl).FileType;
 		cout << endl;
 
 	}
@@ -74,7 +74,7 @@ void Folder::setName(string n)
 void  Folder::PrintCreationTime()
 {
 
-	time(&this->CreationTime);
+	
 
 	struct tm timeInfo;
 	localtime_s(&timeInfo, &CreationTime);

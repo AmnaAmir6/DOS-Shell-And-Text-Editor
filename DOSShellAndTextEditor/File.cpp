@@ -3,6 +3,7 @@
 File::File(string n, string type, string path, string own, Folder* p, bool RO, int _priority, int TTP, time_t CT)
 
 {
+	time(&this->CreationTime);
 	this->Name = n;
 	this->FileType = type;
 	this->Path = path;
@@ -25,8 +26,7 @@ void File::setName(string n)
 void  File::PrintCreationTime()
 {
 	
-	time(&this->CreationTime);
-
+	
 	struct tm timeInfo;
 	localtime_s(&timeInfo, &CreationTime);
 
@@ -39,5 +39,5 @@ void  File::PrintCreationTime()
 
 void File::print()
 {
-
+	cout <<"  " << this->Name << "   "; PrintCreationTime(); cout << "\t" << this->FileType;
 }

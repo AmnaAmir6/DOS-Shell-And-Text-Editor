@@ -39,7 +39,7 @@ bool DOS::Input()
 	
 	if (opr == "attrib")
 	{
-		string FileName = command.substr(3, command.length());
+		string FileName = command.substr(opr.length() + 1, command.length());
 		if (T.DoesFileExist(FileName))
 			T.FindFile(FileName)->print();
 		else
@@ -47,11 +47,12 @@ bool DOS::Input()
 	}
 	else if (opr == "mkdir")
 	{
-		T.insert(new Folder(command.substr(6, command.length()), (T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName()), UserName, T.getCurrent(), false, CurrTime));
+		T.insert(new Folder(command.substr(opr.length() + 1, command.length()), (T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName()), UserName, T.getCurrent(), false, CurrTime));
+		cout << "\n     1 directory created successfully\n";
 	}
 	else if (opr == "cd")
 	{
-		string FolderName = command.substr(3, command.length());
+		string FolderName = command.substr(opr.length() + 1, command.length());
 		if (T.DoesFolderExist(FolderName))
 			T.setCurrent(T.FindFolder(FolderName));
 		else
@@ -69,12 +70,14 @@ bool DOS::Input()
 	}
 	else if (opr == "create")
 	{
-		File* F = new File(command.substr(7, command.length()), "txt", T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName(), UserName, T.getCurrent(), 0, 0, 0, CurrTime);
+		File* F = new File(command.substr(opr.length() + 1, command.length()), "txt", T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName(), UserName, T.getCurrent(), 0, 0, 0, CurrTime);
 		T.getCurrent()->addFile(F);
+		cout << "\n    1 file created successfully\n";
+
 	}
 	else if (opr == "del")
 	{
-		File* F = T.getCurrent()->findFile(command.substr(4, command.length()));
+		File* F = T.getCurrent()->findFile(command.substr(opr.length() + 1, command.length()));
 		if (F)
 			T.getCurrent()->removeFile(F);
 		else

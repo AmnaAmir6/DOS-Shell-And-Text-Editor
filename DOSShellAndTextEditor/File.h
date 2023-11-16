@@ -7,6 +7,7 @@ using namespace std;
 class Folder;
 class File
 {
+public:
 	string Name;
 	string Path;
 	Folder* Parent;

@@ -16,7 +16,5 @@ public:
 	void print();
 	void play();
 	bool Input();
-
-
 };
 
