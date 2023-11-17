@@ -18,6 +18,7 @@ public:
 	string Owner;
 	bool Hidden;
 public:
+	
 	Folder(string n = {}, string path = {}, string own = {}, Folder* p = {}, bool hid = false, time_t CT = {});
 	void  PrintCreationTime();
 	void print();
