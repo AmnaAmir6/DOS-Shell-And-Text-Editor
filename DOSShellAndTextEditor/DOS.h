@@ -20,6 +20,7 @@ public:
 	bool Input();
 	void Copy(string S);
 	void Move(string S);
+	void ConvertExtension(Folder* F, string Extension, string NewExtension);
 	void Rename(string cmnd);
 };
 
