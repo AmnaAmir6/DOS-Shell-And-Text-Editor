@@ -60,8 +60,9 @@ vector<string>Delimeter(string S,char delim)
 }
 void RemoveTillCharFromBack(string& S, char f)
 {
-	while (S.back() != f)
+	while (!S.empty()&&S.back() != f )
 		S.pop_back();
+if(!S.empty())
 	S.pop_back();
 }
 
@@ -74,6 +75,7 @@ void DOS::Copy(string cmnd)
 	InvertString(fname);
 	InvertString(source);
 	source = source.substr(source.find('\\')+1, source.length());
+	//if (T.getCurrent() != T.getRoot())
 	RemoveTillCharFromBack(source, '\\');
 	dest = dest.substr(dest.find('\\') + 1, dest.length());
 	vector<string>src_path = Delimeter(source, '\\');
@@ -126,6 +128,7 @@ void DOS::Move(string cmnd)
 	InvertString(fname);
 	InvertString(source);
 	source = source.substr(source.find('\\')+1, source.length());
+	//if (T.getCurrent() != T.getRoot())
 	RemoveTillCharFromBack(source, '\\');
 	dest = dest.substr(dest.find('\\')+1, dest.length());
 	vector<string>src_path = Delimeter(source, '\\');
@@ -170,6 +173,44 @@ void DOS::Move(string cmnd)
 		cout << "Invalid source Foulder Name.No such Folder exists!" << endl;
 
 }
+void DOS::Rename(string cmnd)
+{
+	string source = cmnd.substr(0, cmnd.find(' '));
+	string new_name = cmnd.substr(source.length() + 1, cmnd.length());
+	InvertString(source);
+	string fname = source.substr(0, source.find('\\'));
+	InvertString(fname);
+	InvertString(source);
+	source = source.substr(source.find('\\') + 1, source.length());
+	//if (T.getCurrent() != T.getRoot())
+	RemoveTillCharFromBack(source, '\\');
+	vector<string>src_path = Delimeter(source, '\\');
+	Folder* Final_src_Folder = T.getRoot();
+	bool notfound = false;
+	for (int i = 0; i < src_path.size(); i++)
+	{
+		Final_src_Folder = Final_src_Folder->findFolder(src_path[i]);
+		if (!Final_src_Folder)
+		{
+			notfound = true;
+			break;
+		}
+	}
+	if (!notfound)
+	{
+		File* file = Final_src_Folder->findFile(fname);
+		if (file)
+		{
+			file->setName(new_name);
+		}
+		else cout << "File Not Found!\n";
+
+	}
+	else cout << "File Not Found!\n";
+
+}
+
+
 bool DOS::Input()
 {
 	string command;
@@ -270,6 +311,11 @@ bool DOS::Input()
 	{
 		string cmnd = command.substr(opr.length() + 1, command.length());
 		Move(cmnd);
+	}
+	else if (opr == "rename")
+	{
+		string cmnd = command.substr(opr.length() + 1, command.length());
+			Rename(cmnd);
 	}
 	else
 		cout << "No such command exists" << endl;

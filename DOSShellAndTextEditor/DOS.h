@@ -20,5 +20,6 @@ public:
 	bool Input();
 	void Copy(string S);
 	void Move(string S);
+	void Rename(string cmnd);
 };
 
