@@ -1,5 +1,6 @@
 #include "Tree.h"
 #include<iostream>
+#include<fstream>
 #include"Folder.h"
 using namespace std;
 
@@ -92,3 +93,4 @@ Folder* Tree::FindFolder(string f)
 {
 	return curr_folder->findFolder(f);
 }
+

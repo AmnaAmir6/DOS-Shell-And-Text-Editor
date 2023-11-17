@@ -21,5 +21,6 @@ public:
 	void setCurrent(Folder* F);
 	File* FindFile(string f);
 	Folder* FindFolder(string f);
+
 };
 

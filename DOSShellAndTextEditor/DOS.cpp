@@ -92,10 +92,6 @@ bool DOS::Input()
 		system("cls");
 		print();
 	}
-	else if (opr == "format")
-	{
-		//T.getCurrent().EmptyFolder();
-	}
 	else if (opr == "prompt")
 	{
 		prompt = !prompt;
@@ -110,14 +106,11 @@ bool DOS::Input()
 	{
 		return true;
 	}
-	else if (opr == "convert")
-	{
-
-	}
 	else if (opr == "copy")
 	{
 
 	}
+	
 	else
 	{
 		cout << "No such command exists" << endl;
@@ -132,3 +125,4 @@ bool DOS::Input()
 	}
 	return false;
 }
+

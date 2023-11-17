@@ -16,5 +16,6 @@ public:
 	void print();
 	void play();
 	bool Input();
+	void ConvertExtension(Folder*F,string Extension, string NewExtension);
 };
 
