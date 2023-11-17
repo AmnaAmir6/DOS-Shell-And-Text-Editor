@@ -21,6 +21,8 @@ public:
 	void setCurrent(Folder* F);
 	File* FindFile(string f);
 	Folder* FindFolder(string f);
-
+	void TreePrint();
+	void PrintFolder(Folder* F, int Spaces = 0);
+	void LoadFromFile(ifstream& rdr);
 };
 

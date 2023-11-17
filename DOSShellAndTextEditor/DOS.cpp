@@ -170,6 +170,18 @@ void DOS::Move(string cmnd)
 		cout << "Invalid source Foulder Name.No such Folder exists!" << endl;
 
 }
+void DOS::ConvertExtension(Folder* F, string Extension, string NewExtension)
+{
+	for (auto itr = F->Folders.begin(); itr != F->Folders.end(); itr++)
+	{
+		ConvertExtension(*itr, Extension, NewExtension);
+	}
+	for (auto itr = F->Files.begin(); itr != F->Files.end(); itr++)
+	{
+		if ((*itr)->FileType == Extension)
+			(*itr)->FileType = NewExtension;
+	}
+}
 bool DOS::Input()
 {
 	string command;
@@ -263,7 +275,36 @@ bool DOS::Input()
 		string cmnd = command.substr(opr.length() + 1, command.length());
 		Move(cmnd);
 	}
-	
+	else if (opr == "ver")
+	{
+		cout << "\n\tMicrosoft Windows[Version 10.0.19045.3448]" << endl;
+	}
+	else if (opr == "rename")
+	{
+		string FileName = command.substr(opr.length() + 1, command.find(' '));
+		string NewFileName = command.substr(FileName.length() + 1, command.length());
+		if (T.DoesFileExist(FileName))
+		{
+			T.FindFile(FileName)->setName(NewFileName);
+			cout << "\n\tFile Renamed Successfully" << endl;
+		}
+		else
+			cout << "\nInvalid File Name.No such File exists" << endl;
+	}
+	else if (opr == "convert")
+	{
+		string Extension = command.substr(opr.length() + 1, command.find(' '));
+		string NewExtension = command.substr(Extension.length() + 1, command.length());
+		ConvertExtension(T.getCurrent(), Extension, NewExtension);
+	}
+	else if (opr == "tree")
+	{
+		T.TreePrint();
+	}
+	else if (opr == "format")
+	{
+		//T.getCurrent().EmptyFolder();
+	}
 	else
 		cout << "No such command exists" << endl;
 

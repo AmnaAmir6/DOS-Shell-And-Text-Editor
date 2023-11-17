@@ -10,6 +10,14 @@ Tree::Tree()
 	curr_folder = root;
 }
 
+void Tree::LoadFromFile(ifstream& rdr)
+{
+	string R;
+	getline(rdr, R);
+	this->root = new Folder(R);
+	
+}
+
 void Tree::insert(Folder * folder)
 {
 	curr_folder->addFolder(folder);
@@ -94,3 +102,30 @@ Folder* Tree::FindFolder(string f)
 	return curr_folder->findFolder(f);
 }
 
+void Tree::TreePrint()
+{
+	cout << "\nFolder PATH listing" << endl;
+	//cout << "V:" << endl;
+	PrintFolder(curr_folder);
+}
+
+void Tree::PrintFolder(Folder* F, int spaces)
+{
+	for (int i = 0; i < spaces; i++)
+	{
+		cout << "   ";
+	}
+	cout << F->Name << endl;
+	for (auto itr = F->Folders.begin(); itr != F->Folders.end(); itr++)
+	{
+		PrintFolder(*itr, spaces + 1);
+	}
+	for (auto itr = F->Files.begin(); itr != F->Files.end(); itr++)
+	{
+		for (int i = 0; i < spaces + 1; i++)
+		{
+			cout << "   ";
+		}
+		cout << (*itr)->Name << endl;
+	}
+}
