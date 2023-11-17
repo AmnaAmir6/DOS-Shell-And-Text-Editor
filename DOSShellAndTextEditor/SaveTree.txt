@@ -18,25 +18,3 @@ ttt
 sdfguu
 wqa
 xyz
-
-
-
-V
-2 3
-f1
-1 1
-s1
-0 0
-abc
-f2
-2 0
-s2
-0 1
-xyz
-s3
-1 0
-w1
-0 2
-lmn
-opq
-rst

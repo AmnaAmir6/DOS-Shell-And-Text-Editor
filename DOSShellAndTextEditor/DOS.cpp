@@ -167,7 +167,7 @@ void DOS::Move(string cmnd)
 			cout << "Invalid File Name.No such File exists!" << endl;
 	}
 	else
-		cout << "Invalid source Foulder Name.No such Folder exists!" << endl;
+		cout << "Invalid source Folder Name.No such Folder exists!" << endl;
 
 }
 void DOS::ConvertExtension(Folder* F, string Extension, string NewExtension)
@@ -300,6 +300,14 @@ bool DOS::Input()
 	else if (opr == "tree")
 	{
 		T.TreePrint();
+	}
+	else if (opr == "loadtree")
+	{
+		T.LoadFromFile();
+	}
+	else if (opr == "save")
+	{
+		T.SaveTree();
 	}
 	else if (opr == "format")
 	{

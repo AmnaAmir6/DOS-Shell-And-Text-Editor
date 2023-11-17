@@ -10,12 +10,66 @@ Tree::Tree()
 	curr_folder = root;
 }
 
-void Tree::LoadFromFile(ifstream& rdr)
+void Tree::LoadFolder(Folder* F,ifstream& rdr)
 {
+	//int folders, files;
+	//rdr >> folders;
+	//rdr >> files;
+	string FFs;
+	getline(rdr, FFs);
+
+	int folders, files;
+	folders = stoi(FFs.substr(0, FFs.find(' ')));
+	files= stoi(FFs.substr(FFs.find(' ')+1,FFs.length()));
+
+	for (int i = 0; i < folders; i++)
+	{
+		string FN;
+		getline(rdr, FN);
+		Folder* NewFolder = new Folder(FN, F->Path + "\\" + F->Name, F->Owner, F, false, time(0));
+		F->addFolder(NewFolder);
+		LoadFolder(NewFolder, rdr);
+	}
+	for (int i = 0; i < files; i++)
+	{
+		string FN;
+		getline(rdr, FN);
+		File* NewFile = new File(FN,"txt", F->Path + "\\" + F->Name, F->Owner,F,false,0,0,time(0));
+		F->addFile(NewFile);
+	}
+}
+
+void Tree::LoadFromFile()
+{
+	ifstream rdr("tree.txt");
 	string R;
 	getline(rdr, R);
 	this->root = new Folder(R);
-	
+	this->curr_folder = root;
+	LoadFolder(root, rdr);
+}
+
+void Tree::SaveFolder(Folder* F, ofstream& wtr)
+{
+	int folders = F->Folders.size();
+	int files = F->Files.size();
+	wtr << folders << " " << files << endl;
+	for (auto itr = F->Folders.begin(); itr != F->Folders.end(); itr++)
+	{
+		wtr << (*itr)->Name << endl;
+		SaveFolder(*itr, wtr);
+	}
+	for (auto itr = F->Files.begin(); itr != F->Files.end(); itr++)
+	{
+		wtr << (*itr)->Name << endl;
+	}
+}
+
+void Tree::SaveTree()
+{
+	ofstream wtr("SaveTree.txt");
+	wtr << root->Name << endl;
+	SaveFolder(root, wtr);
 }
 
 void Tree::insert(Folder * folder)
