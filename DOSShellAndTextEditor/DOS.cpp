@@ -64,11 +64,111 @@ void RemoveTillCharFromBack(string& S, char f)
 		S.pop_back();
 	S.pop_back();
 }
-void RemoveTillCharFromFront(string& S, char f)
+
+void DOS::Copy(string cmnd)
 {
-	InvertString(S);
-	RemoveTillCharFromBack(S,f);
-	InvertString(S);
+	string source = cmnd.substr(0, cmnd.find(' '));
+	string dest = cmnd.substr(source.length() + 1, cmnd.length());
+	InvertString(source);
+	string fname = source.substr(0, source.find('\\'));
+	InvertString(fname);
+	InvertString(source);
+	source = source.substr(source.find('\\')+1, source.length());
+	RemoveTillCharFromBack(source, '\\');
+	dest = dest.substr(dest.find('\\') + 1, dest.length());
+	vector<string>src_path = Delimeter(source, '\\');
+	vector<string>dest_path = Delimeter(dest, '\\');
+	Folder* Final_src_Folder = T.getRoot();
+	Folder* Final_dest_Folder = T.getRoot();
+	bool notfound = false;
+	for (int i = 0; i < src_path.size(); i++)
+	{
+		Final_src_Folder = Final_src_Folder->findFolder(src_path[i]);
+		if (!Final_src_Folder)
+		{
+			notfound = true;
+			break;
+		}
+	}
+	if (!notfound)
+	{
+		File* file = Final_src_Folder->findFile(fname);
+		if (file)
+		{
+			for (int i = 0; i < dest_path.size(); i++)
+			{
+				Final_dest_Folder = Final_dest_Folder->findFolder(dest_path[i]);
+				if (!Final_dest_Folder)
+				{
+					notfound = true;
+					break;
+				}
+			}
+			if (notfound)
+				cout << "Invalid destination Folder Name.No such Folder exists!" << endl;
+			else
+				Final_dest_Folder->addFile(file);
+
+		}
+		else
+			cout << "Invalid File Name.No such File exists!" << endl;
+	}
+	else
+		cout << "Invalid source Foulder Name.No such Folder exists!" << endl;
+
+}
+void DOS::Move(string cmnd)
+{
+	string source = cmnd.substr(0, cmnd.find(' '));
+	string dest = cmnd.substr(source.length() + 1, cmnd.length());
+	InvertString(source);
+	string fname = source.substr(0, source.find('\\'));
+	InvertString(fname);
+	InvertString(source);
+	source = source.substr(source.find('\\')+1, source.length());
+	RemoveTillCharFromBack(source, '\\');
+	dest = dest.substr(dest.find('\\')+1, dest.length());
+	vector<string>src_path = Delimeter(source, '\\');
+	vector<string>dest_path = Delimeter(dest, '\\');
+	Folder* Final_src_Folder = T.getRoot();
+	Folder* Final_dest_Folder = T.getRoot();
+	bool notfound = false;
+	for (int i = 0; i < src_path.size(); i++)
+	{
+		Final_src_Folder = Final_src_Folder->findFolder(src_path[i]);
+		if (!Final_src_Folder)
+		{
+			notfound = true;
+			break;
+		}
+	}
+	if (!notfound)
+	{
+		File* file = Final_src_Folder->findFile(fname);
+		if (file)
+		{
+			Final_src_Folder->removeFile(file);
+			for (int i = 0; i < dest_path.size(); i++)
+			{
+				Final_dest_Folder = Final_dest_Folder->findFolder(dest_path[i]);
+				if (!Final_dest_Folder)
+				{
+					notfound = true;
+					break;
+				}
+			}
+			if (notfound)
+				cout << "Invalid destination Folder Name.No such Folder exists!" << endl;
+			else
+				Final_dest_Folder->addFile(file);
+
+		}
+		else
+			cout << "Invalid File Name.No such File exists!" << endl;
+	}
+	else
+		cout << "Invalid source Foulder Name.No such Folder exists!" << endl;
+
 }
 bool DOS::Input()
 {
@@ -164,55 +264,12 @@ bool DOS::Input()
 	else if (opr == "copy")
 	{
 		string cmnd = command.substr(opr.length() + 1, command.length());
-		string source = cmnd.substr(0, cmnd.find(' '));
-		string dest = cmnd.substr(source.length() + 1, cmnd.length());
-		InvertString(source);
-		string fname = source.substr(0, source.find('\\'));
-		InvertString(fname);
-		InvertString(source);
-		RemoveTillCharFromFront(source, '\\');
-		RemoveTillCharFromBack(source, '\\');
-		RemoveTillCharFromFront(dest, '\\');
-		vector<string>src_path = Delimeter(source, '\\');
-		vector<string>dest_path = Delimeter(dest, '\\');
-		Folder* Final_src_Folder = T.getRoot();
-		Folder* Final_dest_Folder = T.getRoot();
-		bool notfound = false;
-		for (int i = 0; i < src_path.size(); i++)
-		{
-			Final_src_Folder = Final_src_Folder->findFolder(src_path[i]);
-			if (!Final_src_Folder)
-			{
-				notfound = true;
-				break;
-			}
-		}
-		if (!notfound)
-		{	
-			File* file = Final_src_Folder->findFile(fname);
-			if(file)
-			{
-				for (int i = 0; i < dest_path.size(); i++)
-				{
-					Final_dest_Folder = Final_dest_Folder->findFolder(dest_path[i]);
-					if (!Final_dest_Folder)
-					{
-						notfound = true;
-						break;
-					}
-				}
-				if(notfound)
-					cout << "Invalid destination Folder Name.No such Folder exists!" << endl;
-				else
-					Final_dest_Folder->addFile(file);
-				
-			}
-			else
-				cout << "Invalid File Name.No such File exists!" << endl;
-		}
-		else 
-			cout << "Invalid source Foulder Name.No such Folder exists!" << endl;
-
+		Copy(cmnd);
+	}
+	else if (opr == "move")
+	{
+		string cmnd = command.substr(opr.length() + 1, command.length());
+		Move(cmnd);
 	}
 	else
 		cout << "No such command exists" << endl;

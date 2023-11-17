@@ -18,6 +18,7 @@ public:
 	void print();
 	void play();
 	bool Input();
-
+	void Copy(string S);
+	void Move(string S);
 };
 
