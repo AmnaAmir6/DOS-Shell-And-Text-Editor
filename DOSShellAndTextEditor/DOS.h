@@ -1,7 +1,9 @@
 #pragma once
 #include<iostream>
 #include<string>
+#include<iomanip>
 using namespace std;
+
 #include"Folder.h"
 #include"Tree.h"
 
@@ -16,5 +18,6 @@ public:
 	void print();
 	void play();
 	bool Input();
+
 };
 
