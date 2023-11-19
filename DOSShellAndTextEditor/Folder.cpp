@@ -43,6 +43,7 @@ void Folder::removeFile(File* F)
 void Folder::removeFolder(Folder* F)
 {
 	Folders.remove(F);
+	delete F;
 }
 File* Folder::findFile(string FN)
 {

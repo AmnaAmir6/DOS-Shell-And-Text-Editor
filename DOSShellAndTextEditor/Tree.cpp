@@ -9,7 +9,6 @@ Tree::Tree()
 	this->root = new Folder("V");
 	curr_folder = root;
 }
-
 void Tree::LoadFolder(Folder* F,ifstream& rdr)
 {
 	//int folders, files;
@@ -38,7 +37,6 @@ void Tree::LoadFolder(Folder* F,ifstream& rdr)
 		F->addFile(NewFile);
 	}
 }
-
 void Tree::LoadFromFile()
 {
 	ifstream rdr("tree.txt");
@@ -48,7 +46,6 @@ void Tree::LoadFromFile()
 	this->curr_folder = root;
 	LoadFolder(root, rdr);
 }
-
 void Tree::SaveFolder(Folder* F, ofstream& wtr)
 {
 	int folders = F->Folders.size();
@@ -64,14 +61,12 @@ void Tree::SaveFolder(Folder* F, ofstream& wtr)
 		wtr << (*itr)->Name << endl;
 	}
 }
-
 void Tree::SaveTree()
 {
 	ofstream wtr("SaveTree.txt");
 	wtr << root->Name << endl;
 	SaveFolder(root, wtr);
 }
-
 void Tree::insert(Folder * folder)
 {
 	curr_folder->addFolder(folder);
@@ -146,7 +141,6 @@ void Tree::setCurrent(Folder* F)
 {
 	curr_folder = F;
 }
-
 File* Tree::FindFile(string f)
 {
 	return curr_folder->findFile(f);
@@ -155,14 +149,12 @@ Folder* Tree::FindFolder(string f)
 {
 	return curr_folder->findFolder(f);
 }
-
 void Tree::TreePrint()
 {
 	cout << "\nFolder PATH listing" << endl;
 	//cout << "V:" << endl;
 	PrintFolder(curr_folder);
 }
-
 void Tree::PrintFolder(Folder* F, int spaces)
 {
 	for (int i = 0; i < spaces; i++)
@@ -183,7 +175,6 @@ void Tree::PrintFolder(Folder* F, int spaces)
 		cout << (*itr)->Name << endl;
 	}
 }
-
 void Tree::EraseTree()
 {
 	Folder* r = new Folder(root->Name, root->Path, root->Owner, nullptr, false, root->CreationTime);

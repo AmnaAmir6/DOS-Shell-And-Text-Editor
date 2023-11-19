@@ -287,15 +287,16 @@ bool DOS::Input()
 	}
 	else if (opr == "rmdir")
 	{
-
+		string folder = command.substr(opr.length() + 1, command.length());
 		Folder* CurrentFolder = T.getCurrent();
-		if (CurrentFolder != T.getRoot())
+		Folder* F = CurrentFolder->findFolder(folder);
+		if (F)
 		{
-			T.setCurrent(T.getCurrent()->getParent());
-			T.getCurrent()->removeFolder(CurrentFolder);
-
+			cout<<"directory " << F->Name << " removed successfully!\n";
+			CurrentFolder->removeFolder(F);
 		}
-		else cout << "Can't remove Root directory V\n";
+		else cout << "Folder Not Found\n";
+	
 	}
 	else if (opr == "exit")
 	{
