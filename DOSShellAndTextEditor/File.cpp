@@ -41,3 +41,7 @@ void File::print()
 {
 	cout <<"  " << this->Name << "   "; PrintCreationTime(); cout << "\t" << this->FileType;
 }
+File::~File()
+{
+	Parent = nullptr;
+}

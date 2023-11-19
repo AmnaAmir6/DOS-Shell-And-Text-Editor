@@ -30,16 +30,6 @@ void DOS::play()
 	}
 }
 
-void InvertString(string&S)
-{
-	int si = 0; int ei = S.length() - 1;
-
-	while(si<ei)
-	{
-		swap(S[si], S[ei]);
-		si++; ei--;
-	}
-}
 vector<string>Delimeter(string S,char delim)
 {
 	vector<string>Res; int si = 0, ei = 0;
@@ -58,31 +48,18 @@ vector<string>Delimeter(string S,char delim)
 		Res.push_back(temp);
 	return Res;
 }
-void RemoveTillCharFromBack(string& S, char f)
-{
-	while (!S.empty()&&S.back() != f )
-		S.pop_back();
-if(!S.empty())
-	S.pop_back();
-}
 
 void DOS::Copy(string cmnd)
 {
-	string source = cmnd.substr(0, cmnd.find(' '));
-	string dest = cmnd.substr(source.length() + 1, cmnd.length());
-	InvertString(source);
-	string fname = source.substr(0, source.find('\\'));
-	InvertString(fname);
-	InvertString(source);
-	source = source.substr(source.find('\\')+1, source.length());
-	//if (T.getCurrent() != T.getRoot())
-	RemoveTillCharFromBack(source, '\\');
-	dest = dest.substr(dest.find('\\') + 1, dest.length());
+	string source = cmnd.substr(cmnd.find('\\')+1, cmnd.find(' ')-3);
+	string dest = cmnd.substr(cmnd.find(' ')+1+ cmnd.find('\\')+1, cmnd.length());
 	vector<string>src_path = Delimeter(source, '\\');
 	vector<string>dest_path = Delimeter(dest, '\\');
+	string fname = src_path.back(); src_path.pop_back();
 	Folder* Final_src_Folder = T.getRoot();
 	Folder* Final_dest_Folder = T.getRoot();
 	bool notfound = false;
+
 	for (int i = 0; i < src_path.size(); i++)
 	{
 		Final_src_Folder = Final_src_Folder->findFolder(src_path[i]);
@@ -109,7 +86,11 @@ void DOS::Copy(string cmnd)
 			if (notfound)
 				cout << "Invalid destination Folder Name.No such Folder exists!" << endl;
 			else
+			{
 				Final_dest_Folder->addFile(file);
+				cout << "file copied successfully!" << endl;
+
+			}
 
 		}
 		else
@@ -121,18 +102,11 @@ void DOS::Copy(string cmnd)
 }
 void DOS::Move(string cmnd)
 {
-	string source = cmnd.substr(0, cmnd.find(' '));
-	string dest = cmnd.substr(source.length() + 1, cmnd.length());
-	InvertString(source);
-	string fname = source.substr(0, source.find('\\'));
-	InvertString(fname);
-	InvertString(source);
-	source = source.substr(source.find('\\')+1, source.length());
-	//if (T.getCurrent() != T.getRoot())
-	RemoveTillCharFromBack(source, '\\');
-	dest = dest.substr(dest.find('\\')+1, dest.length());
+	string source = cmnd.substr(cmnd.find('\\') + 1, cmnd.find(' ') - 3);
+	string dest = cmnd.substr(cmnd.find(' ') + 1 + cmnd.find('\\') + 1, cmnd.length());
 	vector<string>src_path = Delimeter(source, '\\');
 	vector<string>dest_path = Delimeter(dest, '\\');
+	string fname = src_path.back(); src_path.pop_back();
 	Folder* Final_src_Folder = T.getRoot();
 	Folder* Final_dest_Folder = T.getRoot();
 	bool notfound = false;
@@ -163,7 +137,11 @@ void DOS::Move(string cmnd)
 			if (notfound)
 				cout << "Invalid destination Folder Name.No such Folder exists!" << endl;
 			else
+			{
 				Final_dest_Folder->addFile(file);
+				cout << "file moved successfully!" << endl;
+
+			}
 
 		}
 		else
@@ -187,16 +165,10 @@ void DOS::ConvertExtension(Folder* F, string Extension, string NewExtension)
 }
 void DOS::Rename(string cmnd)
 {
-	string source = cmnd.substr(0, cmnd.find(' '));
-	string new_name = cmnd.substr(source.length() + 1, cmnd.length());
-	InvertString(source);
-	string fname = source.substr(0, source.find('\\'));
-	InvertString(fname);
-	InvertString(source);
-	source = source.substr(source.find('\\') + 1, source.length());
-	//if (T.getCurrent() != T.getRoot())
-	RemoveTillCharFromBack(source, '\\');
+	string source = cmnd.substr(cmnd.find('\\') + 1, cmnd.find(' ') - 3);
+	string new_name = cmnd.substr(cmnd.find(' ') + 1, cmnd.length());
 	vector<string>src_path = Delimeter(source, '\\');
+	string fname = src_path.back(); src_path.pop_back();
 	Folder* Final_src_Folder = T.getRoot();
 	bool notfound = false;
 	for (int i = 0; i < src_path.size(); i++)
@@ -214,6 +186,8 @@ void DOS::Rename(string cmnd)
 		if (file)
 		{
 			file->setName(new_name);
+			cout << "file renamed successfully!" << endl;
+
 		}
 		else cout << "File Not Found!\n";
 
@@ -221,8 +195,29 @@ void DOS::Rename(string cmnd)
 	else cout << "File Not Found!\n";
 
 }
+void DOS::FindFile(Folder* root, string name,bool& found,File* &res)
+{
+	File* f = root->findFile(name);
+	if (f)
+	{
+		found = true;
+		res = f;
+		return;
+	}
 
-
+	for (auto i = root->Folders.begin(); i != root->Folders.end(); i++)
+	{
+		FindFile(*i, name,found,res);
+		if (found)  return;
+	}
+}
+File* DOS::FindFile(string name)
+{
+	bool found = false;
+	File* f = {};
+	FindFile(T.getRoot(), name, found, f);
+	return f;
+}
 bool DOS::Input()
 {
 	string command;
@@ -322,15 +317,8 @@ bool DOS::Input()
 	}
 	else if (opr == "rename")
 	{
-		string FileName = command.substr(opr.length() + 1, command.find(' '));
-		string NewFileName = command.substr(FileName.length() + 1, command.length());
-		if (T.DoesFileExist(FileName))
-		{
-			T.FindFile(FileName)->setName(NewFileName);
-			cout << "\n\tFile Renamed Successfully" << endl;
-		}
-		else
-			cout << "\nInvalid File Name.No such File exists" << endl;
+		string cmnd = command.substr(opr.length() + 1, command.length());
+		Rename(cmnd);
 	}
 	else if (opr == "convert")
 	{
@@ -352,8 +340,21 @@ bool DOS::Input()
 	}
 	else if (opr == "format")
 	{
-		//T.getCurrent().EmptyFolder();
+		T.EraseTree();		
 	}
+	else if (opr == "find")
+	{
+		string name = command.substr(opr.length() + 1, command.length());
+		File* file = FindFile(name);
+		if (file)
+			cout << "File "<<file->Name<<"."<<file->FileType<< " Found at path " << file->Path << endl;
+		else cout << "File not Found!"<<endl;
+	}
+	else if (opr == "help")
+	{
+
+	}
+
 	else
 		cout << "No such command exists" << endl;
 

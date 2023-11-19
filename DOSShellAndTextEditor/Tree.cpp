@@ -183,3 +183,12 @@ void Tree::PrintFolder(Folder* F, int spaces)
 		cout << (*itr)->Name << endl;
 	}
 }
+
+void Tree::EraseTree()
+{
+	Folder* r = new Folder(root->Name, root->Path, root->Owner, nullptr, false, root->CreationTime);
+	delete root;
+	root = r;
+	curr_folder = r;
+	r = nullptr;
+}
