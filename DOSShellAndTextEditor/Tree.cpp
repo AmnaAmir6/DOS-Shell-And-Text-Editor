@@ -183,3 +183,17 @@ void Tree::PrintFolder(Folder* F, int spaces)
 		cout << (*itr)->Name << endl;
 	}
 }
+
+void Tree::EmptyFolder(Folder* F)
+{
+	for (auto itr = F->Folders.begin(); itr != F->Folders.end(); itr++)
+	{
+		delete* itr;
+	}
+	for (auto itr = F->Files.begin(); itr != F->Files.end(); itr++)
+	{
+		delete* itr;
+	}
+	F->Folders.clear();
+	F->Files.clear();
+}

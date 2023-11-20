@@ -311,7 +311,11 @@ bool DOS::Input()
 	}
 	else if (opr == "format")
 	{
-		//T.getCurrent().EmptyFolder();
+		T.EmptyFolder(T.getRoot());
+	}
+	else if (opr == "rmdir")
+	{
+		T.EmptyFolder(T.getCurrent());
 	}
 	else
 		cout << "No such command exists" << endl;

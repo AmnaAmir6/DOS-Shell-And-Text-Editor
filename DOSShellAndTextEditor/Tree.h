@@ -27,5 +27,6 @@ public:
 	void SaveTree();
 	void LoadFolder(Folder* F, ifstream& rdr);
 	void SaveFolder(Folder* F, ofstream& wtr);
+	void EmptyFolder(Folder* F);
 };
 

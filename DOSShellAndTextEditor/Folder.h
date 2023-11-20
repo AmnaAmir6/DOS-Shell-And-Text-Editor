@@ -32,5 +32,6 @@ public:
 	void setName(string n);
 	string getPath();
 	Folder* getParent();
+	~Folder();
 };
 
