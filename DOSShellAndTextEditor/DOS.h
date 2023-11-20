@@ -21,5 +21,9 @@ public:
 	void Copy(string S);
 	void Move(string S);
 	void ConvertExtension(Folder* F, string Extension, string NewExtension);
+	void Rename(string cmnd);
+	File* FindFile(string name);
+	void FindFile(Folder* root,string name,bool &found,File*&file);
+
 };
 

@@ -41,6 +41,7 @@ void Folder::removeFile(File* F)
 void Folder::removeFolder(Folder* F)
 {
 	Folders.remove(F);
+	delete F;
 }
 File* Folder::findFile(string FN)
 {
@@ -88,16 +89,18 @@ Folder* Folder::getParent()
 {
 	return Parent;
 }
-
 Folder::~Folder()
 {
-	for (Folder* subfolder : Folders) 
-	{
-		delete subfolder;
-	}
 
-	for (File* file : Files) 
+	for (auto i = Folders.begin(); i != Folders.end(); i++)
 	{
-		delete file;
+		delete* i;
 	}
+	Folders.clear();
+	for (auto i = Files.begin(); i != Files.end(); i++)
+	{
+		delete* i;
+	}
+	Files.clear();
+	Parent= nullptr;
 }
