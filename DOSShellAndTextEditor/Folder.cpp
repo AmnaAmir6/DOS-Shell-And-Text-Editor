@@ -1,4 +1,5 @@
 #include "Folder.h"
+
 Folder::Folder(string n, string path, string own, Folder* p, bool hid, time_t CT)
 :Name(n),
 Path(path),Owner(own),Parent(p),Hidden(hid),CreationTime(CT)
@@ -6,7 +7,7 @@ Path(path),Owner(own),Parent(p),Hidden(hid),CreationTime(CT)
 	time(&this->CreationTime);
 
 }
-void Folder::print()//todo
+void Folder::print()
 {
 	cout << "\nDirectory Of " << Path << "\\" << Name << "\\" << endl<<endl;
 
@@ -24,9 +25,6 @@ void Folder::print()//todo
 		cout << endl;
 
 	}
-
-
-
 }
 void Folder::addFile(File* F)
 {
@@ -73,9 +71,6 @@ void Folder::setName(string n)
 }
 void  Folder::PrintCreationTime()
 {
-
-	
-
 	struct tm timeInfo;
 	localtime_s(&timeInfo, &CreationTime);
 
