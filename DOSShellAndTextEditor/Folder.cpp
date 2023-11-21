@@ -88,6 +88,7 @@ Folder* Folder::getParent()
 {
 	return Parent;
 }
+
 Folder::~Folder()
 {
 	for (auto i = Folders.begin(); i != Folders.end(); i++)

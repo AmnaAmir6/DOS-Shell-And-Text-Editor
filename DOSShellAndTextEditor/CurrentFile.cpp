@@ -1,6 +1,8 @@
 #include "CurrentFile.h"
 #include<iomanip>
 #include<conio.h>
+#include<string>
+
 CurrentFile::CurrentFile()
 {
 	Curr_col = 0;
@@ -9,6 +11,7 @@ CurrentFile::CurrentFile()
     text.push_back(l1);
     ri = text.begin();
     ci = (*ri).Line.begin();
+    Name = "file1.txt";
 }
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
@@ -212,4 +215,68 @@ void CurrentFile::Insert()
     }
 
 
+}
+
+void CurrentFile::SaveFile()
+{
+    ofstream wtr(Name);
+    wtr << Curr_row << " " << Curr_col << endl;
+    for (auto row = text.begin(); row != text.end(); row++)
+    {
+        for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
+        {
+            wtr << (*col);
+        }
+        wtr << endl;
+    }
+}
+
+void CurrentFile::LoadFile()
+{
+    ifstream rdr(Name);
+    string CursorIndex;
+
+    getline(rdr, CursorIndex);
+
+    Curr_row = stoi(CursorIndex.substr(0, CursorIndex.find(' ')));
+    Curr_col = stoi(CursorIndex.substr(CursorIndex.find(' ') + 1, CursorIndex.length()));
+    char ch;
+    while (rdr >> ch)
+    {
+        if (ch != '\n')
+        {
+            if ((*ri).Line.size() == 1 && (*ci) == ' ')
+            {
+                *ci = ch;
+            }
+            else
+            {
+                (*ri).Line.push_back(ch);
+                ci++;
+            }
+        }
+        else
+        {
+            Lines text_line;
+            text.push_back(text_line);
+            ri++;
+        }
+    }
+    int cri = 0, cci = 0;
+    for (auto row = text.begin();row != text.end(); row++, cri++)
+    {
+        if (cri == Curr_row)
+        {
+            ri = row;
+            break;
+        }
+    }
+    for (auto col = (*ri).Line.begin(); col != (*ri).Line.end(); col++, cci++)
+    {
+        if (cci == Curr_col)
+        {
+            ci = col;
+            break;
+        }
+    }
 }
