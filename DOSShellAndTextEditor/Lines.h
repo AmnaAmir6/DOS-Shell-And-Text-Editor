@@ -46,6 +46,9 @@ public:
 			gotoRowCol(ri,ci);
 			cout << *i;
 		}
+		//cout << " count " << word_count<<" ";
+		//cout << " max " << max_length_word;
+
 		cout << endl;
 	}
 	

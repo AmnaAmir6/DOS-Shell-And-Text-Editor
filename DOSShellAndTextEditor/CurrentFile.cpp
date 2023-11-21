@@ -82,19 +82,20 @@ void CurrentFile::Insert()
         if (key == 13)//enter key
         {
             Lines text_line;
-            if (!(*ri).Line.empty() && ci != (*ri).Line.end())
+            auto t = ci;
+            if (!(*ri).Line.empty() && ++t!=(*ri).Line.end())
             {               
                 auto i = ci;
                 list<char>temp(++i, (*ri).Line.end());
                 text_line.Line.swap(temp);
-                (*ri).Line.erase(i, (*ri).Line.end());
-            
+                (*ri).Line.erase(i, (*ri).Line.end());            
                 Set_Max_and_Count(text_line);
                 ri++;
                 text.insert(ri, text_line);
+                ri--;
+                ci = (*ri).Line.begin();
                 Curr_col = 0;
                 Curr_row++;
-                gotoRowCol(Curr_row, Curr_col);
             }
             else
             {
@@ -108,10 +109,19 @@ void CurrentFile::Insert()
             
         else if (key == 8) 
         { // Backspace key
-            Curr_col--;
-            (*ri).Line.remove(*ci);
-            ci--;
-
+            auto t = ci;
+            if(ci!=(*ri).Line.begin())
+            {
+                ci--;
+                Curr_col--;
+                (*ri).Line.erase(t);           
+            }
+            else  if (ci == (*ri).Line.begin()&&*ci!=' ')
+            {
+                *ci = ' ';
+                Curr_col--;
+                
+            }
         }
         else if (key == 27) 
         { // Escape key
@@ -120,36 +130,66 @@ void CurrentFile::Insert()
         }
         else if (key == -32) { // Arrow keys have a two-character sequence, start with 224
             key = _getch(); // Read the second character of the sequence
-            switch (key) {
+            switch (key) 
+            {
             case 72://up
             {
-                Curr_col = 0;
-                Curr_row--;
-                ri--;
-                ci = (*ri).Line.begin();
-
+                if(ri!=text.begin())
+                {                   
+                    Curr_row--;
+                    ri--;
+                    ci = (*ri).Line.begin();
+                    int i = 0;
+                    for (; i < Curr_col&& ci != (*ri).Line.end(); i++)
+                    {
+                        ci++;
+                    }
+                    if (ci == (*ri).Line.end())ci--;
+                    Curr_col = i;
+                }
                 break;
             }
             case 80://down
             {
-                Curr_col = 0;
-                Curr_row++;
-                ri++;
-                ci = (*ri).Line.begin();
+                if (ri != text.end())
+                {
+                    Curr_row++;
+                    ri++;
+                    if (ri == text.end())
+                    {
+                        Curr_row--;
+                        ri--;
+                    }
+                    ci = (*ri).Line.begin();
+                    int i = 0;
+                    for (; i < Curr_col && ci != (*ri).Line.end(); i++)
+                    {
+                        ci++;
+                    }
+                    if (ci == (*ri).Line.end())ci--;
+
+                    Curr_col = i;
+                }
                 break;
             }
             case 75://left
             {
-                Curr_col--;
-                ci--;
-
+                if(ci!=(*ri).Line.begin())
+                {
+                    Curr_col--;
+                    ci--;
+                }
                 break;
             }
             case 77://right
             {
-                Curr_col++;
-                ci++;
-
+                auto t = ci;
+                t++;
+                if (t!=(*ri).Line.end())
+                {
+                    Curr_col++;
+                    ci++;
+                }
                 break;
             }
             default:
