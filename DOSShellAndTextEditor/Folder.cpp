@@ -89,6 +89,7 @@ Folder* Folder::getParent()
 {
 	return Parent;
 }
+
 Folder::~Folder()
 {
 

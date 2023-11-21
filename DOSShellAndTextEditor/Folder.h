@@ -33,6 +33,5 @@ public:
 	string getPath();
 	Folder* getParent();
 	~Folder();
-	
 };
 
