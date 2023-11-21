@@ -240,3 +240,4 @@ void CurrentFile::LoadFile()
         }
     }
 }
+
