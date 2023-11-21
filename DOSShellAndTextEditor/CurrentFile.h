@@ -16,10 +16,8 @@ class CurrentFile
 
 	 CurrentFile();
 	 void Insert();
-
-	
-
-
+	 void Set_Max_and_Count(Lines& L);
+	 void Print();
 
 };
 

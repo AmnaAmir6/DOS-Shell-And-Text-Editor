@@ -1,6 +1,7 @@
 #pragma once
 #include<iostream>
 #include<list>
+#include"utility.h"
 using namespace std;
 class Lines
 {
@@ -9,9 +10,7 @@ class Lines
 	int smallest_word_length;
 public:
 	//int cuurent_column;
-
 	list<char>Line;
-	list<char>::iterator ci;
 	Lines()
 	{
 		//cuurent_column = 0;
@@ -20,11 +19,6 @@ public:
 		smallest_word_length=0;
 		char a = ' ';
 		Line.push_back(a);
-		ci = Line.begin();
-	}
-	list<char>::iterator GetBegin()
-	{
-		return Line.begin();
 	}
 	
 	int GetWord_Count()
@@ -34,6 +28,25 @@ public:
 	int GetLongestWordLength()
 	{
 		return max_length_word;
+	}
+	void SetWord_Count(int WC)
+	{
+		word_count = WC;
+	}
+	void SetLongestWordLength(int max)
+	{
+		max_length_word=max;
+	}
+	void PrintLine(int ri)
+	{
+		int ci = 0;
+		for (auto i = Line.begin(); i != Line.end(); i++,ci++)
+		{
+			SetClr(240);
+			gotoRowCol(ri,ci);
+			cout << *i;
+		}
+		cout << endl;
 	}
 	
 };
