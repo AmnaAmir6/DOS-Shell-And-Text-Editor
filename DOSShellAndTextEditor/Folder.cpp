@@ -61,7 +61,6 @@ Folder* Folder::findFolder(string FN)
 	}
 	return nullptr;
 }
-
 string Folder::getName()
 {
 	return Name;
@@ -92,16 +91,13 @@ Folder* Folder::getParent()
 
 Folder::~Folder()
 {
-
 	for (auto i = Folders.begin(); i != Folders.end(); i++)
-	{
 		delete* i;
-	}
+	
 	Folders.clear();
 	for (auto i = Files.begin(); i != Files.end(); i++)
-	{
 		delete* i;
-	}
+	
 	Files.clear();
 	Parent= nullptr;
 }
