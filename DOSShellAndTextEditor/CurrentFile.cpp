@@ -109,7 +109,14 @@ void CurrentFile::Insert()
                 ci = text.back().Line.begin();
             }
         }
-            
+        else if (key == 19) 
+        { // Ctrl + S
+            SaveFile();
+        }
+        else if (key == 15)
+        { // Ctrl + O
+            LoadFile();
+        }
         else if (key == 8) 
         { // Backspace key
             auto t = ci;
