@@ -83,12 +83,12 @@ void CurrentFile::Insert()
         {
             Lines text_line;
             if (!(*ri).Line.empty() && ci != (*ri).Line.end())
-            {
-                
-                list<char>temp(++ci, (*ri).Line.end());
+            {               
+                auto i = ci;
+                list<char>temp(++i, (*ri).Line.end());
                 text_line.Line.swap(temp);
-                (*ri).Line.erase(ci, (*ri).Line.end());
-                ci--;
+                (*ri).Line.erase(i, (*ri).Line.end());
+            
                 Set_Max_and_Count(text_line);
                 ri++;
                 text.insert(ri, text_line);
