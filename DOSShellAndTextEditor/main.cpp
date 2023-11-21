@@ -2,21 +2,22 @@
 #include"Folder.h"
 #include<time.h>
 #include<conio.h>
+#include<windows.h>
 #include<ctime>
-#include<iomanip>
 #include<vector>
 #include <chrono>   // For std::chrono::seconds
 #include <thread>   // F
 #include"DOS.h"
+#include"CurrentFile.h"
 using namespace std;
-int main()
+int mwain()
 {
     DOS D;
     D.play();
     return 0;
 }
 
-int main2() {
+int main44() {
     
     vector<Folder*>Folds;
     time_t c;
@@ -26,5 +27,25 @@ int main2() {
 
     
     
+    return 0;
+}
+
+int main()
+{
+    /*char ch;
+    	while (true)
+    	{
+    
+    		if (_kbhit())
+    		{
+    
+    			ch = _getch();
+    			{
+    				cout << ch << "  Asci  " << int(ch)<<endl;
+    			}
+    		}
+    	}*/
+    CurrentFile* file= new CurrentFile();
+    file->Insert();
     return 0;
 }
