@@ -8,6 +8,7 @@ CurrentFile::CurrentFile()
     Lines l1;   
     text.push_back(l1);
     ri = text.begin();
+    ci = (*ri).Line.begin();
 }
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
@@ -64,6 +65,7 @@ void CurrentFile::Print()
     {
         (*i).PrintLine(ri);
     }
+    gotoRowCol(Curr_row, Curr_col);
 }
 
 
@@ -82,10 +84,11 @@ void CurrentFile::Insert()
             Lines text_line;
             if (!(*ri).Line.empty() && ci != (*ri).Line.end())
             {
-                list<char>temp(ci, (*ri).Line.end());             
-                text_line.Line = temp;
+                
+                list<char>temp(++ci, (*ri).Line.end());
                 text_line.Line.swap(temp);
                 (*ri).Line.erase(ci, (*ri).Line.end());
+                ci--;
                 Set_Max_and_Count(text_line);
                 ri++;
                 text.insert(ri, text_line);
@@ -124,7 +127,6 @@ void CurrentFile::Insert()
                 Curr_row--;
                 ri--;
                 ci = (*ri).Line.begin();
-                gotoRowCol(Curr_row, Curr_col);
 
                 break;
             }
@@ -134,14 +136,12 @@ void CurrentFile::Insert()
                 Curr_row++;
                 ri++;
                 ci = (*ri).Line.begin();
-                gotoRowCol(Curr_row, Curr_col);
                 break;
             }
             case 75://left
             {
                 Curr_col--;
                 ci--;
-                gotoRowCol(Curr_row, Curr_col);
 
                 break;
             }
@@ -149,7 +149,6 @@ void CurrentFile::Insert()
             {
                 Curr_col++;
                 ci++;
-                gotoRowCol(Curr_row, Curr_col);
 
                 break;
             }
@@ -159,11 +158,15 @@ void CurrentFile::Insert()
         }
         else 
         {
-            (*ri).Line.push_back(key);
-            ci= (*ri).Line.end();
-            ci--;
-            Curr_col++;
-            gotoRowCol(Curr_row, Curr_col);
+            if ((*ri).Line.size() == 1 && (*ci) == ' ')
+            {
+                *ci = key;
+            }
+            else
+            {    (*ri).Line.push_back(key);           
+                ci++;
+            }
+            Curr_col++;           
         }
         Print();
     }
