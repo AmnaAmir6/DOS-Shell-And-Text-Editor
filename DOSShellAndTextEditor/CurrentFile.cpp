@@ -3,7 +3,7 @@
 #include<conio.h>
 #include<string>
 
-CurrentFile::CurrentFile()
+CurrentFile::CurrentFile(string FileName)
 {
 	Curr_col = 0;
 	Curr_row = 0;
@@ -11,7 +11,7 @@ CurrentFile::CurrentFile()
     text.push_back(l1);
     ri = text.begin();
     ci = (*ri).Line.begin();
-    Name = "file1.txt";
+    Name = FileName;
 }
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
@@ -80,7 +80,6 @@ void CurrentFile::Insert()
 	char key = {};
     while (true) 
     {
-      
         key = _getch(); 
         if (key == 13)//enter key
         {
@@ -116,6 +115,14 @@ void CurrentFile::Insert()
         else if (key == 15)
         { // Ctrl + O
             LoadFile();
+        }
+        else if (key == 26)
+        { // Ctrl + Z
+            DoUndo();
+        }
+        else if (key == 25)
+        { // Ctrl + Y
+            DoRedo();
         }
         else if (key == 8) 
         { // Backspace key
@@ -213,10 +220,17 @@ void CurrentFile::Insert()
                 *ci = key;
             }
             else
-            {    (*ri).Line.push_back(key);           
+            {   
+                //(*ri).Line.push_back(key);    //this inserts value at the end of line always independent of where the cursor is
+                //ci++;
+
+                auto temp = ci;
                 ci++;
+                (*ri).Line.insert(ci, key);
+                ci = ++temp;
             }
-            Curr_col++;           
+            Curr_col++;     
+            SaveState();
         }
         Print();
     }
@@ -264,8 +278,9 @@ void CurrentFile::LoadFile()
         }
         else
         {
-            Lines text_line;
-            text.push_back(text_line);
+            /*Lines text_line;
+            text.push_back(text_line);*/
+            text.push_back(Lines());
             ri++;
         }
     }
@@ -287,4 +302,42 @@ void CurrentFile::LoadFile()
         }
     }
 }
+void CurrentFile::SaveState()
+{
+    FileState S(*this);
+    if (Undo.size() > 5)
+        Undo.erase(Undo.begin());
+    Undo.push_back(S);
+}
+void CurrentFile::LoadState(const FileState& S)
+{
+    text = S.text;
+    Curr_row = S.CRow;
+    Curr_col = S.CCol;
+    ri = S.RowIndex;
+    ci = S.ColIndex;
+    
+}
+void CurrentFile::DoUndo()
+{
+    if (!Undo.empty())
+    {
+        FileState CState(*this);
+        Redo.push(CState);
+        auto S = Undo.back();
+        LoadState(S);
+        Undo.pop_back();//this is deleting the object S
+    }
+}
+void CurrentFile::DoRedo()
+{
+    if (!Redo.empty())
+    {
+        auto S = Redo.top();
+        Undo.push_back(S);
+        Redo.pop();
+        LoadState(S);
+    }
+}
+
 
