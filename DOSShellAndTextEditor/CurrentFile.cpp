@@ -12,6 +12,7 @@ CurrentFile::CurrentFile(string FileName)
     ri = text.begin();
     ci = (*ri).Line.begin();
     Name = FileName;
+    max_col_length = 10;
 }
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
@@ -241,28 +242,67 @@ void CurrentFile::Insert()
         }
         else 
         {
-            if ((*ri).Line.size() == 1 && (*ci) == ' ')
-            {
-                *ci = key;
-            }
-            else if (!(*ri).Line.empty() && Curr_col == 0)
-            {
-                (*ri).Line.insert(ci, key);
-                ci--;
-            }
-            else
-            {
-                ci++;
-                (*ri).Line.insert(ci, key);
-                ci--;            
-            }
-            Curr_col++;     
-            SaveState();
+                if ((*ri).Line.size() == 1 && (*ci) == ' ')
+                {
+                    *ci = key;
+                }
+                else if (!(*ri).Line.empty() && Curr_col == 0)
+                {
+                    (*ri).Line.insert(ci, key);
+                    ci--;
+                }
+                else
+                {
+                    ci++;
+                    (*ri).Line.insert(ci, key);
+                    ci--;
+                }
+                //insert an element and then check if the 
+                // line size has exceeded the 
+                // limit and shift last character to the 
+                // start of next line ok DASH ITU
+                if ((*ri).Line.size() > max_col_length)
+                {
+                    auto tr_prev = ri;
+                    auto tr_forw = ri;
+                    tr_forw++;
+                    while (tr_forw != text.end())
+                    {
+                        auto b = (*tr_prev).Line.back();
+                        (*tr_forw).Line.push_front(b);
+                        (*tr_prev).Line.pop_back();
+                   
+                        if (((*tr_forw).Line.size() <= max_col_length)|| tr_forw == text.end())
+                            break;
+                        tr_prev = tr_forw;
+                        tr_forw++;
+                    }
+                    //ri = tr_forw;
+                  //  ci = (*ri).Line.begin();
+                    if (tr_forw == text.end())
+                    {
+                        Lines temp_l;
+                        text.insert(tr_forw, temp_l);
+                        tr_forw--;                   
+                        auto i = (*tr_prev).Line.back();
+                        (*tr_prev).Line.pop_back();
+                        *(*tr_forw).Line.begin() = i;
+                    }
+                    if (Curr_col >= max_col_length)
+                    {
+                        Curr_row++;
+                        ri++;
+                        Curr_col = 1;
+                        ci = (*ri).Line.begin();
+                    }
+                    else Curr_col++;
+                }
+                else Curr_col++;
+                
+           // SaveState();
         }
         Print();
     }
-
-
 }
 
 void CurrentFile::SaveFile()
@@ -278,7 +318,6 @@ void CurrentFile::SaveFile()
         wtr << endl;
     }
 }
-
 void CurrentFile::LoadFile()
 {
     ifstream rdr(Name);

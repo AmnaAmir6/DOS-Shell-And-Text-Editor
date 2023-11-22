@@ -15,7 +15,7 @@ class CurrentFile
 	int Curr_row, Curr_col;
 	list<char>::iterator ci;
 	string Name;
-
+	int max_col_length;
 	struct FileState
 	{
 		int CCol, CRow;
