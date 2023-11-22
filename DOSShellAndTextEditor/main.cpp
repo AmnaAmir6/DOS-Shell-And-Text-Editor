@@ -45,7 +45,7 @@ int main()
     			}
     		}
     	}*/
-    CurrentFile* file= new CurrentFile();
+    CurrentFile* file= new CurrentFile("file1.txt");
     file->Insert();
     return 0;
 }
