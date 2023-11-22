@@ -136,12 +136,17 @@ void CurrentFile::Insert()
         {
             // Backspace key
             if (Curr_col == 0&&ri!=text.begin())
-            {
+            {               
+                auto t = ri;
                 ri--;
                 ci = (*ri).Line.end(); ci--;
                 Curr_col = (*ri).Line.size() ;
                 if (Curr_col < 0)Curr_col = 0;
                 Curr_row--;
+                if ((*t).Line.size()==1&&(*t).Line.front()==' ')
+                {
+                    text.erase(t);
+                }
             }
             auto t = ci;
             if (Curr_col > 0 && ci == (*ri).Line.begin())
