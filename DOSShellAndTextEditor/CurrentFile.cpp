@@ -86,7 +86,7 @@ void CurrentFile::Insert()
         {
             Lines text_line;
             auto t = ci;
-            if (!(*ri).Line.empty() && ++t!=(*ri).Line.end())
+            if (!(*ri).Line.empty() && ++t!=(*ri).Line.end()&&Curr_col>0)
             {               
                 auto i = ci;
                 list<char>temp(++i, (*ri).Line.end());
@@ -100,31 +100,47 @@ void CurrentFile::Insert()
                 Curr_col = 0;
                 Curr_row++;
             }
+            else if (!(*ri).Line.empty() && Curr_col == 0)
+            {
+                text.insert(ri,text_line);
+                Curr_row++;
+                //ci = text.back().Line.begin();
+            }
             else
             {
-                text.push_back(text_line);
                 ri++;
+                text.insert(ri,text_line);
+                ri--;
                 Curr_col = 0;
                 Curr_row++;
-                ci = text.back().Line.begin();
+                ci = (*ri).Line.begin();
             }
         }
             
         else if (key == 8) 
         { // Backspace key
+          
             auto t = ci;
-            if(ci!=(*ri).Line.begin())
+            if (Curr_col > 0 && ci == (*ri).Line.begin())
+            {
+                Curr_col--;
+            
+                if ((*ri).Line.size() == 1)
+                    *ci = ' ';
+                else
+                {
+                    ci++;
+                    (*ri).Line.pop_front();
+                }
+            }
+
+            else if (Curr_col > 0)
             {
                 ci--;
                 Curr_col--;
-                (*ri).Line.erase(t);           
-            }
-            else  if (ci == (*ri).Line.begin()&&*ci!=' ')
-            {
-                *ci = ' ';
-                Curr_col--;
-                
-            }
+                (*ri).Line.erase(t);
+            }       
+            
         }
         else if (key == 27) 
         { // Escape key
@@ -147,7 +163,8 @@ void CurrentFile::Insert()
                     {
                         ci++;
                     }
-                    if (ci == (*ri).Line.end())ci--;
+                    if(ci!=(*ri).Line.begin())
+                    ci--;
                     Curr_col = i;
                 }
                 break;
@@ -169,8 +186,8 @@ void CurrentFile::Insert()
                     {
                         ci++;
                     }
-                    if (ci == (*ri).Line.end())ci--;
-
+                    if (ci != (*ri).Line.begin()&&Curr_col!=0)
+                    ci--;
                     Curr_col = i;
                 }
                 break;
@@ -182,16 +199,25 @@ void CurrentFile::Insert()
                     Curr_col--;
                     ci--;
                 }
+                else
+                {
+                    Curr_col = 0;
+                }
                 break;
             }
             case 77://right
             {
-                auto t = ci;
-                t++;
-                if (t!=(*ri).Line.end())
-                {
+                if (Curr_col == 0&&ci==(*ri).Line.begin())
                     Curr_col++;
-                    ci++;
+                else
+                {
+                    auto t = ci;
+                    t++;
+                    if (t != (*ri).Line.end())
+                    {
+                        Curr_col++;
+                        ci++;
+                    }
                 }
                 break;
             }
@@ -205,9 +231,16 @@ void CurrentFile::Insert()
             {
                 *ci = key;
             }
+            else if (!(*ri).Line.empty() && Curr_col == 0)
+            {
+                (*ri).Line.insert(ci, key);
+                ci--;
+            }
             else
-            {    (*ri).Line.push_back(key);           
+            {
                 ci++;
+                (*ri).Line.insert(ci, key);
+                ci--;            
             }
             Curr_col++;           
         }
