@@ -12,7 +12,7 @@ CurrentFile::CurrentFile(string FileName)
     ri = text.begin();
     ci = (*ri).Line.begin();
     Name = FileName;
-    max_col_length = 10;
+    max_col_length = 40;//
 }
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
