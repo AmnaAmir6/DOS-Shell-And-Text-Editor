@@ -133,8 +133,16 @@ void CurrentFile::Insert()
             DoRedo();
         }
         else if (key == 8) 
-        { // Backspace key
-          
+        {
+            // Backspace key
+            if (Curr_col == 0&&ri!=text.begin())
+            {
+                ri--;
+                ci = (*ri).Line.end(); ci--;
+                Curr_col = (*ri).Line.size() ;
+                if (Curr_col < 0)Curr_col = 0;
+                Curr_row--;
+            }
             auto t = ci;
             if (Curr_col > 0 && ci == (*ri).Line.begin())
             {
@@ -148,7 +156,6 @@ void CurrentFile::Insert()
                     (*ri).Line.pop_front();
                 }
             }
-
             else if (Curr_col > 0)
             {
                 ci--;
