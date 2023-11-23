@@ -114,5 +114,7 @@ class CurrentFile
 	 void SaveState();
 	 void DoUndo();
 	 void DoRedo();
+	 float GetAvgWordLength();
+	 int GetParagraphCount();
 };
 

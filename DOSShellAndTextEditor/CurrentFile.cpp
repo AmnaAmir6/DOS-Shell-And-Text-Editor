@@ -2,7 +2,7 @@
 #include<iomanip>
 #include<conio.h>
 #include<string>
-
+#include<stack>
 CurrentFile::CurrentFile(string FileName)
 {
 	Curr_col = 0;
@@ -17,49 +17,59 @@ CurrentFile::CurrentFile(string FileName)
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
 
-    if (L.Line.empty())
+    if (L.Line.size()==1&&L.Line.front()==' ')
     {
         L.SetWord_Count(0);
         L.SetLongestWordLength(0);
         return;
     }
-
-    if (L.Line.size() == 1 )
-    {
-        if ((*L.Line.begin()) != ' ')
-        {
-            L.SetWord_Count(1);
-            return;
-        }
-        L.SetWord_Count(0);
-        return;
-    }
     int word_count = 0;
-    auto i = L.Line.begin();
     auto prev = L.Line.begin();
-    i++;
+    bool word_started = false;
+    auto i = L.Line.begin();
     for (; i != L.Line.end(); i++,prev++)
     {
-        if (*prev!=' ' && *i == ' ')
+        if (*i != ' ' && !word_started)
+        {
             word_count++;
+            word_started = true;
+        }
+        else if(*i==' ')
+            word_started = false;
     }
     int max_length = 0;
+    int min_length = 0;
     int length = 0;
+    int sum_of_lengths=0;
     for (auto i = L.Line.begin(); i != L.Line.end(); i++)
     {
         if (i != L.Line.begin() && *i == ' ')
         {
             if (length > max_length)
                 max_length = length;
+             if (length < min_length)
+                min_length = length;
+            else if (min_length == 0 && length > 0)
+                min_length = length;
+             sum_of_lengths += length;
             length = 0;
             i++;
+            if (i == L.Line.end())break;
         }    
         length++;
     } 
+    if (length > 0)
+        sum_of_lengths += length;
     if (length > max_length)max_length = length;
+    if (max_length > 0 && min_length == 0)min_length = max_length;
+    else if (length < min_length&&length>0)min_length = length;
     L.SetLongestWordLength(max_length);
     L.SetWord_Count(word_count);
+    L.SetMinWordLength(min_length);
+    L.SetSumOfLengths(sum_of_lengths);
 }
+
+
 void CurrentFile::Print()
 {
     SetClr(255);
@@ -68,19 +78,51 @@ void CurrentFile::Print()
     for (auto i = text.begin(); i != text.end(); i++,ri++)
     {
         (*i).PrintLine(ri);
+        //cout<<"max "<<(*i).GetLongestWordLength() << " WC " << (*i).GetWord_Count()<<" min "<<(*i).GetMinWordLength()<< endl;
     }
+    gotoRowCol(1, 120);   
+    cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
+    gotoRowCol(2, 120);   
+    cout << "ParaGrapgh Count : " << GetParagraphCount();
     gotoRowCol(Curr_row, Curr_col);
 }
-
-
+float  CurrentFile::GetAvgWordLength()
+{
+    float  Word_count = 0;
+    float  total_length = 0;
+    for (auto i = text.begin(); i != text.end(); i++)
+    {
+        Word_count += (*i).GetWord_Count();
+        total_length += (*i).GetSumOfLengths();
+    }
+    return total_length / Word_count;
+}
+int CurrentFile::GetParagraphCount()
+{
+    int para_count = 0;
+    for (auto i = text.begin(); i != text.end(); i++)
+    {
+        if (((*i).Line.size() > 1 && (*i).Line.size() < max_col_length))
+        {
+            para_count++;
+        }
+        else if (((*i).Line.size() > 1 && (*i).Line.size() == max_col_length))
+        {
+            auto t = i; t++;
+            if (t == text.end())para_count++;
+        }
+        else if ((*i).Line.size() == 1 && (*i).Line.front() != ' ')para_count++;
+    }
+    return para_count;
+}
 void CurrentFile::Insert()
 {
-
 	SetClr(255);
     system("cls");
 	char key = {};
     while (true) 
     {
+
         key = _getch(); 
         if (key == 13)//enter key
         {
@@ -147,12 +189,12 @@ void CurrentFile::Insert()
                 {
                     text.erase(t);
                 }
+                
             }
             auto t = ci;
             if (Curr_col > 0 && ci == (*ri).Line.begin())
             {
-                Curr_col--;
-            
+                Curr_col--;           
                 if ((*ri).Line.size() == 1)
                     *ci = ' ';
                 else
@@ -167,7 +209,7 @@ void CurrentFile::Insert()
                 Curr_col--;
                 (*ri).Line.erase(t);
             }       
-            
+            Set_Max_and_Count(*ri);
         }
         else if (key == 27) 
         { // Escape key
@@ -221,11 +263,20 @@ void CurrentFile::Insert()
             }
             case 75://left
             {
+                if (Curr_col == 0&&ri!=text.begin())
+                {
+                    ri--;
+                    ci = (*ri).Line.end();
+                    ci--;
+                    Curr_row--;
+                    Curr_col = (*ri).Line.size();
+                    break;
+                }
                 if(ci!=(*ri).Line.begin())
                 {
                     Curr_col--;
                     ci--;
-                }
+                }                
                 else
                 {
                     Curr_col = 0;
@@ -234,6 +285,16 @@ void CurrentFile::Insert()
             }
             case 77://right
             {
+                auto tri = ri; tri++;
+                if (Curr_col==(*ri).Line.size() && tri != text.end())
+                {
+                    ri++;
+                    ci = (*ri).Line.begin();
+                    Curr_row++;
+                    Curr_col =0;
+                    break;
+                }
+                
                 if (Curr_col == 0&&ci==(*ri).Line.begin())
                     Curr_col++;
                 else
@@ -257,6 +318,8 @@ void CurrentFile::Insert()
                 if ((*ri).Line.size() == 1 && (*ci) == ' ')
                 {
                     *ci = key;
+                    (*ri).SetWord_Count(1);
+                    (*ri).SetLongestWordLength(1);
                 }
                 else if (!(*ri).Line.empty() && Curr_col == 0)
                 {
@@ -269,6 +332,8 @@ void CurrentFile::Insert()
                     (*ri).Line.insert(ci, key);
                     ci--;
                 }
+
+                Set_Max_and_Count(*ri);
                 //insert an element and then check if the 
                 // line size has exceeded the 
                 // limit and shift last character to the 
@@ -281,9 +346,8 @@ void CurrentFile::Insert()
                     while (tr_forw != text.end())
                     {
                         auto b = (*tr_prev).Line.back();
-                        (*tr_forw).Line.push_front(b);
-                        (*tr_prev).Line.pop_back();
-                   
+                        (*tr_forw).Line.push_front(b); Set_Max_and_Count(*tr_forw);
+                        (*tr_prev).Line.pop_back();    Set_Max_and_Count(*tr_prev);
                         if (((*tr_forw).Line.size() <= max_col_length)|| tr_forw == text.end())
                             break;
                         tr_prev = tr_forw;
@@ -299,6 +363,8 @@ void CurrentFile::Insert()
                         auto i = (*tr_prev).Line.back();
                         (*tr_prev).Line.pop_back();
                         *(*tr_forw).Line.begin() = i;
+                        Set_Max_and_Count(*tr_forw);
+                        Set_Max_and_Count(*tr_prev);
                     }
                     if (Curr_col >= max_col_length)
                     {

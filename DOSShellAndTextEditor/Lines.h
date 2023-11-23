@@ -8,6 +8,7 @@ class Lines
 	int word_count;
 	int max_length_word;
 	int smallest_word_length;
+	int sum_of_words_length;
 public:
 	//int cuurent_column;
 	list<char>Line;
@@ -19,15 +20,27 @@ public:
 		smallest_word_length=0;
 		char a = ' ';
 		Line.push_back(a);
+		sum_of_words_length = 0;
 	}
 	
 	int GetWord_Count()
 	{
 		return word_count;
 	}
+	void SetSumOfLengths(int s_of_l)
+	{
+		sum_of_words_length = s_of_l;
+	}
+	int GetSumOfLengths()
+	{
+		return sum_of_words_length;
+	}
 	int GetLongestWordLength()
 	{
 		return max_length_word;
+	}int GetMinWordLength()
+	{
+		return smallest_word_length;
 	}
 	void SetWord_Count(int WC)
 	{
@@ -36,6 +49,10 @@ public:
 	void SetLongestWordLength(int max)
 	{
 		max_length_word=max;
+	}
+	void SetMinWordLength(int min)
+	{
+		smallest_word_length=min;
 	}
 	void PrintLine(int ri)
 	{
