@@ -3,6 +3,7 @@
 #include<conio.h>
 #include<string>
 #include<stack>
+
 CurrentFile::CurrentFile(string FileName)
 {
 	Curr_col = 0;
@@ -13,6 +14,8 @@ CurrentFile::CurrentFile(string FileName)
     ci = (*ri).Line.begin();
     Name = FileName;
     max_col_length = 40;//
+    finding = false;
+    SearchBox = new RectShape(20,2,4,120,0);
 }
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
@@ -69,20 +72,174 @@ void CurrentFile::Set_Max_and_Count(Lines& L)
     L.SetSumOfLengths(sum_of_lengths);
 }
 
+void CurrentFile::FindWords(string name)
+{
+    int i = 1; auto start = (*text.begin()).Line.begin();
+    auto st_line = text.begin();
+    auto end_line = text.begin();
+    auto end = start; bool started = false; bool completed = false;
+    string temp = "";
+    Word W;
+    for (auto ri = text.begin(); ri != text.end(); ri++)
+    {
+        for (auto ci = (*ri).Line.begin(); ci != (*ri).Line.end(); ci++)
+        {
+            if (*ci == name[0]&&!started)
+            {
+                start = ci;
+                st_line = ri;
+                started = true;
+                temp += *ci;
+                continue;
+            }
+            if (*ci != name[i])
+            {
+                started = false; completed = false;
+                temp = "";
+                i = 1;
+            }
+            if (started)
+            {
+                temp += *ci;
+                i++;
+                if (temp.length() == name.length())
+                {
+                    if (temp == name)
+                    {
+                        end = ci;
+                        end_line = ri;
+                        W.start = start;
+                        W.end = end;
+                        W.starting_Line = st_line;
+                        W.ending_Line = end_line;
+                        SelectedWords.push(W);    
+                    }
+                    started = false;
+                    temp = "";
+                    i = 1;
+                }                
+            }
+            
+        }
+    }
 
+}
 void CurrentFile::Print()
 {
     SetClr(255);
     system("cls");
+
+
     int ri = 0;
     for (auto i = text.begin(); i != text.end(); i++,ri++)
     {
         (*i).PrintLine(ri);
         //cout<<"max "<<(*i).GetLongestWordLength() << " WC " << (*i).GetWord_Count()<<" min "<<(*i).GetMinWordLength()<< endl;
     }
+    SearchBox->Draw();
+    SetClr(240);
     gotoRowCol(1, 120);   
     cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
     gotoRowCol(2, 120);   
+    cout << "ParaGrapgh Count : " << GetParagraphCount();
+    gotoRowCol(Curr_row, Curr_col);
+
+}
+//void CurrentFile::HighlightWords()
+//{
+//    SetClr(255);
+//    system("cls");
+//    int ri = 0; int ci = 0;
+//    Word W = SelectedWords.front();
+//    SelectedWords.pop();
+//    bool lineFound = false;
+//    bool started = false;
+//    for (auto i = text.begin(); i != text.end(); i++, ri++)
+//    {
+//        if(W.starting_Line==W.ending_Line)
+//        { 
+//            if (W.starting_Line == i)
+//                lineFound = true;
+//        }
+//        for (auto c = (*i).Line.begin(); c != (*i).Line.end(); c++,ci++)
+//        {
+//            if (lineFound && W.start == c&&!started)
+//                started = true;
+//            if (started)
+//                SetClr(4);
+//            else
+//            SetClr(240);
+//            if (c == W.end)
+//            {
+//                started = false;
+//                if(!SelectedWords.empty())
+//                {
+//                    W = SelectedWords.front();
+//                    SelectedWords.pop();
+//                }
+//            }
+//
+//            gotoRowCol(ri, ci);
+//            cout << *c;
+//        }
+//    }
+//    SearchBox->Draw();
+//    SetClr(240);
+//    gotoRowCol(1, 120);
+//    cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
+//    gotoRowCol(2, 120);
+//    cout << "ParaGrapgh Count : " << GetParagraphCount();
+//    gotoRowCol(Curr_row, Curr_col);
+//}
+void CurrentFile::HighlightWords()
+{
+    SetClr(255);
+    system("cls");
+    int ri = 0; int ci = 0;
+    Word W;
+    bool started = false;
+    bool selected = false;
+    
+    for (auto i = text.begin(); i != text.end(); i++, ri++)
+    {
+        
+        for (auto c = (*i).Line.begin(); c != (*i).Line.end(); c++, ci++)
+        {
+
+            if (!selected)
+            {
+                if (!SelectedWords.empty())
+                {
+                    W = SelectedWords.front();
+                    SelectedWords.pop();
+                    selected = true;
+                }
+            }
+
+            if (*c!=' '&&selected && c == W.start)
+                started = true;
+            if(started)
+                SetClr(4);
+            else
+                SetClr(240);
+
+            if (*c != ' ' &&selected&& started&&c == W.end)
+            {
+                gotoRowCol(ri, ci);
+                cout << *c;
+                started = false;
+                selected = false;
+                continue;
+            }
+            gotoRowCol(ri, ci);
+            cout << *c;
+        }
+    }
+    SearchBox->Draw();
+    SetClr(240);
+    gotoRowCol(1, 120);
+    cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
+    gotoRowCol(2, 120);
     cout << "ParaGrapgh Count : " << GetParagraphCount();
     gotoRowCol(Curr_row, Curr_col);
 }
@@ -122,8 +279,14 @@ void CurrentFile::Insert()
 	char key = {};
     while (true) 
     {
-
+        /*
+        int rpos; int cpos;
+        MygetRowColbyLeftClick2(rpos, cpos);
+        if (SearchBox->contains(rpos, cpos))
+            SearchBox->setclr(15);*/
         key = _getch(); 
+        if (key != 9)finding = false;
+
         if (key == 13)//enter key
         {
             Lines text_line;
@@ -133,7 +296,8 @@ void CurrentFile::Insert()
                 auto i = ci;
                 list<char>temp(++i, (*ri).Line.end());
                 text_line.Line.swap(temp);
-                (*ri).Line.erase(i, (*ri).Line.end());            
+                (*ri).Line.erase(i, (*ri).Line.end());                            
+                Set_Max_and_Count(*ri);
                 Set_Max_and_Count(text_line);
                 ri++;
                 text.insert(ri, text_line);
@@ -174,6 +338,22 @@ void CurrentFile::Insert()
         { // Ctrl + Y
             DoRedo();
         }
+        else if (key == 9)
+        {//tab+f to find
+            char c = _getch();
+            if (c ==102)
+            {
+                pos P; string fname;
+                P = SearchBox->GetPOsition();
+                gotoRowCol(P.ri, P.ci+1);
+                SetClr(15);
+                getline(cin,fname);
+                FindWords(fname);
+                if(!SelectedWords.empty())
+                finding = true;
+            }
+        }
+
         else if (key == 8) 
         {
             // Backspace key
@@ -379,8 +559,10 @@ void CurrentFile::Insert()
                 
            // SaveState();
         }
-        Print();
-    }
+        if(finding)
+        HighlightWords();
+        else Print();
+}
 }
 
 void CurrentFile::SaveFile()

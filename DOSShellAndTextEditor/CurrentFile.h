@@ -101,7 +101,61 @@ class CurrentFile
 	};
 	deque<FileState>Undo;
 	stack<FileState>Redo;
+	struct pos
+	{
+		int ri, ci;
+	};
+	struct RectShape
+	{
+		int width; int height;
+		int r; int c;
+		int clr;
+		RectShape(int w,int h,int row,int col,int color)
+		{
+			width = w, height = h, r = row, c = col, clr = color;
+		}
+		bool contains(int mp_r, int mp_c)
+		{
+			if ((mp_r > r && mp_r < r + height) && (mp_c > c && mp_c < c + width))
+				return true;
+			return false;
+		}
+		void Draw()
+		{
+			SetClr(clr);
 
+			for (int ri = r; ri < height + r; ri++)
+			{
+				for (int ci = c; ci < width + c; ci++)
+				{
+					gotoRowCol(ri, ci);
+					cout << char(-37);
+				}
+				cout << endl;
+			}
+		}
+		void setclr(int c)
+		{
+			clr = c;
+		}
+		pos GetPOsition()
+		{
+			pos P;
+			P.ri = r; P.ci = c;
+			return P;
+		}
+
+	};
+	struct Word
+	{
+		list<char>::iterator start;
+		list<char>::iterator end;
+		list<Lines>::iterator starting_Line;
+		list<Lines>::iterator ending_Line;
+	};
+	RectShape* SearchBox;
+	queue<Word> SelectedWords;
+	bool finding;
  public:
 
 	 CurrentFile(string FileName);
@@ -116,5 +170,7 @@ class CurrentFile
 	 void DoRedo();
 	 float GetAvgWordLength();
 	 int GetParagraphCount();
+	 void FindWords(string name);
+	 void HighlightWords();
 };
 
