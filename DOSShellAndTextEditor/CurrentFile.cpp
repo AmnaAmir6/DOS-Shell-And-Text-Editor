@@ -71,7 +71,88 @@ void CurrentFile::Set_Max_and_Count(Lines& L)
     L.SetMinWordLength(min_length);
     L.SetSumOfLengths(sum_of_lengths);
 }
+void CurrentFile::ToLower()
+{
 
+    auto temp_ci = ci;
+    auto temp_ri = ri;
+    auto si = ci;
+    int cr = Curr_col;
+    while (*ci != ' ')
+    {
+        *ci = tolower(static_cast<unsigned char>(*ci));
+        ci++;
+        if (ci == (*ri).Line.end())
+        {
+            ri++;
+            if (ri == text.end())break;
+            si = (*ri).Line.begin();
+        }
+    }
+    ci = temp_ci;
+    ri = temp_ri;
+    while (*ci != ' ')
+    {
+        *ci = tolower(static_cast<unsigned char>(*ci));
+        if (ci == (*ri).Line.begin() && ri != text.begin())
+        {
+            ri--;
+            ci = (*ri).Line.end();
+            ci--;
+        }
+        else if (ci == (*ri).Line.begin() && ri == text.begin())
+        {
+            break;
+        }
+        else ci--;
+    }
+
+    ci = temp_ci; ri = temp_ri;
+
+
+
+}
+void CurrentFile::ToUpper()
+{
+    
+     auto temp_ci = ci;
+     auto temp_ri = ri;
+     auto si = ci;
+    int cr = Curr_col;
+    while (*ci != ' ')
+    {
+        *ci = toupper(static_cast<unsigned char>(*ci));
+        ci++;
+        if (ci == (*ri).Line.end())
+        {
+            ri++;
+            if (ri == text.end())break;
+            si = (*ri).Line.begin();
+        }
+    }
+    ci = temp_ci;
+    ri = temp_ri;
+    while (*ci != ' ')
+    {
+        *ci = toupper(static_cast<unsigned char>(*ci));
+        if (ci == (*ri).Line.begin() && ri != text.begin())
+        {
+            ri--;
+            ci = (*ri).Line.end();
+            ci--;
+        }
+        else if (ci == (*ri).Line.begin() && ri == text.begin())
+        {
+            break;
+        }
+        else ci--;
+    }
+
+    ci = temp_ci; ri = temp_ri;
+
+
+
+}
 void CurrentFile::FindWords(string name)
 {
     int i = 1; auto start = (*text.begin()).Line.begin();
@@ -142,6 +223,10 @@ void CurrentFile::Print()
     cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
     gotoRowCol(2, 120);   
     cout << "ParaGrapgh Count : " << GetParagraphCount();
+    gotoRowCol(SearchBox->GetPOsition().ri + 2, SearchBox->GetPOsition().ci + 3);
+    SetClr(240);
+    cout << " ( press TAB+F )";
+
     gotoRowCol(Curr_row, Curr_col);
 
 }
@@ -242,7 +327,7 @@ void CurrentFile::HighlightWords(string name)
     gotoRowCol(1, 120);
     cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
     gotoRowCol(2, 120);
-    cout << "ParaGrapgh Count : " << GetParagraphCount();
+    cout << "ParaGrapgh Count : " << GetParagraphCount();       
     gotoRowCol(SearchBox->GetPOsition().ri, SearchBox->GetPOsition().ci);
     SetClr(15);
     cout << name;
@@ -344,6 +429,16 @@ void CurrentFile::Insert()
         else if (key == 25)
         { // Ctrl + Y
             DoRedo();
+        }
+        else if (key == 21)
+        {//Ctrl+U
+
+            ToUpper();
+        }
+        else if (key == 12)
+        {//Ctrl+L
+
+            ToLower();
         }
         else if (key == 9)
         {//tab+f to find
