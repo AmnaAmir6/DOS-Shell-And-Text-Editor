@@ -468,6 +468,7 @@ void CurrentFile::Insert()
         else if (key == 26)
         { // Ctrl + Z
             DoUndo();
+            continue;
         }
         else if (key == 25)
         { // Ctrl + Y
@@ -477,6 +478,7 @@ void CurrentFile::Insert()
         {//Ctrl+U
             
             ToUpperOrLower("upper");
+
         }
         else if (key == 12)
         {//Ctrl+L
@@ -726,10 +728,11 @@ void CurrentFile::Insert()
                 }
                 else Curr_col++;
                 
-           // SaveState();
         }
         if(!finding)
-         Print();
+        {
+            Print();
+        }
 }
 }
 
@@ -847,10 +850,11 @@ void CurrentFile::LoadFile()
 }
 void CurrentFile::SaveState()
 {
-    FileState S(*this);
+    //FileState S(*this);
+    FileState* S = new FileState(*this);
     if (Undo.size() > 5)
         Undo.erase(Undo.begin());
-    Undo.push_back(S);
+    Undo.push_back(*S);
 }
 void CurrentFile::LoadState(const FileState& S)
 {
@@ -861,12 +865,23 @@ void CurrentFile::LoadState(const FileState& S)
     ci = S.ColIndex;
     
 }
+//void CurrentFile::DoUndo()
+//{
+//    if (!Undo.empty())
+//    {
+//        FileState CState(*this);
+//        Redo.push(CState);
+//        auto S = Undo.back();
+//        LoadState(S);
+//        Undo.pop_back();//this is deleting the object S
+//    }
+//}
 void CurrentFile::DoUndo()
 {
     if (!Undo.empty())
     {
-        FileState CState(*this);
-        Redo.push(CState);
+        FileState *CState= new FileState(*this);
+        Redo.push(*CState);
         auto S = Undo.back();
         LoadState(S);
         Undo.pop_back();//this is deleting the object S

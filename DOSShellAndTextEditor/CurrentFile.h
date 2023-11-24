@@ -30,6 +30,7 @@ class CurrentFile
 			auto itr = text.begin();
 			for (auto row = CF.text.begin(); row != CF.text.end(); row++,itr++)
 			{
+				text.push_back(Lines());
 				for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
 				{
 					if (row == CF.text.begin() && col == (*row).Line.begin())
@@ -67,6 +68,7 @@ class CurrentFile
 			auto itr = text.begin();
 			for (auto row = FS.text.begin(); row != FS.text.end(); row++, itr++)
 			{
+				text.push_back(Lines());
 				for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
 				{
 					if (row == FS.text.begin() && col == (*row).Line.begin())
