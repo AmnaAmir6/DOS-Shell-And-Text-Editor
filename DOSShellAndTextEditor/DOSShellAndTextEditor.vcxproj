@@ -148,12 +148,14 @@
     <ClCompile Include="Folder.cpp" />
     <ClCompile Include="Lines.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source.cpp" />
     <ClCompile Include="TextEditor.cpp" />
     <ClCompile Include="Tree.cpp" />
     <ClCompile Include="utility.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="SaveTree.txt" />
+    <Text Include="dictionary.txt" />
     <Text Include="tree.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

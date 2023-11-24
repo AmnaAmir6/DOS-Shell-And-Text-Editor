@@ -68,9 +68,13 @@
     <ClCompile Include="utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="SaveTree.txt" />
     <Text Include="tree.txt" />
+    <Text Include="dictionary.txt" />
   </ItemGroup>
 </Project>

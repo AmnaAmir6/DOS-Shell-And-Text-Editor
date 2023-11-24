@@ -134,14 +134,27 @@ void CurrentFile::FindWords(string name)
         {
             if (*ci == name[0]&&!started)
             {
+                temp += *ci;
                 start = ci;
                 st_line = ri;
+                if(name!=temp)
                 started = true;
-                temp += *ci;
+                else
+                {
+                    end = ci;
+                    end_line = ri;
+                    W.start = start;
+                    W.end = end;
+                    W.starting_Line = st_line;
+                    W.ending_Line = end_line;
+                    SelectedWords.push(W);
+                    temp = "";
+                    started = false;
+                }
                 continue;
             }
             if (*ci != name[i])
-            {
+            {  
                 started = false; completed = false;
                 temp = "";
                 i = 1;
@@ -269,17 +282,17 @@ void CurrentFile::HighlightWords(string name)
                 }
             }
 
-            if (*c != ' ' && selected && i==W.starting_Line&&c
-                == W.start)
+            if (*c != ' ' && selected && i==W.starting_Line&&c == W.start)
                 started = true;
 
-            else if (*c != ' ' &&selected&& started&&i==W.ending_Line && c == 
-                W.end)
+            if (*c != ' ' &&selected&& started&&i==W.ending_Line && c == W.end)
             {
+                SetClr(176);
                 gotoRowCol(ri, ci);
                 cout << *c;
                 started = false;
                 selected = false;
+                SetClr(240);
                 continue;
             }
             if (started)
