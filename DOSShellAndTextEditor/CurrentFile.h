@@ -174,6 +174,7 @@ class CurrentFile
 	 void HighlightWords(string name);
 	 void ToUpperOrLower(string cast);
 	 void AddPrefixtoWord(string word, string Prefix);
+	 void AddPostfixtoWord(string word, string Postfix);
 	 int SpecialCharCount();
 };
 
