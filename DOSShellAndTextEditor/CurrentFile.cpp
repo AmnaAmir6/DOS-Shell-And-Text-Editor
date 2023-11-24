@@ -172,6 +172,7 @@ void CurrentFile::FindWords(string name)
     }
 
 }
+
 void CurrentFile::Print()
 {
     SetClr(255);
@@ -408,24 +409,51 @@ void CurrentFile::Insert()
             ToUpperOrLower("lower");
 
         }
-        else if (key == 9)
-        {//tab+f to find
+        if (key == 9)
+        {//tab
             char c = _getch();
-            if (c ==102)
+            if (c == 102)//tab+f to find
             {
                 pos P; string fname;
                 P = SearchBox->GetPOsition();
-                gotoRowCol(P.ri, P.ci+1);
+                gotoRowCol(P.ri, P.ci + 1);
                 SetClr(15);
-                getline(cin,fname);
+                getline(cin, fname);
                 FindWords(fname);
-                if(!SelectedWords.empty())
-                finding = true;
+                if (!SelectedWords.empty())
+                    finding = true;
                 HighlightWords(fname);
 
             }
+            if (c == 112)//tab+p to addprefix
+            {
+                pos P; string fname;
+                P = SearchBox->GetPOsition();
+                gotoRowCol(P.ri, P.ci + 1);
+                SetClr(15);
+                getline(cin, fname);
+                FindWords("is");
+                if (!SelectedWords.empty())
+                {
+                    finding = true;
+                    AddPrefixtoWord("is", fname);
+                }
+            }
+            if (c == 115)//tab+s to addpostfix
+            {
+                pos P; string fname;
+                P = SearchBox->GetPOsition();
+                gotoRowCol(P.ri, P.ci + 1);
+                SetClr(15);
+                getline(cin, fname);
+                FindWords("is");
+                if (!SelectedWords.empty())
+                {
+                    finding = true;
+                    AddPostfixtoWord("is", fname);
+                }
+            }
         }
-
         else if (key == 8) 
         {
             // Backspace key
@@ -649,6 +677,57 @@ void CurrentFile::SaveFile()
         wtr << endl;
     }
 }
+//void CurrentFile::LoadFile()
+//{
+//    ifstream rdr(Name);
+//    string CursorIndex;
+//
+//    getline(rdr, CursorIndex);
+//
+//    Curr_row = stoi(CursorIndex.substr(0, CursorIndex.find(' ')));
+//    Curr_col = stoi(CursorIndex.substr(CursorIndex.find(' ') + 1, CursorIndex.length()));
+//    char ch;
+//    while (rdr >> ch)
+//    {
+//        if (ch != '\n')
+//        {
+//            if ((*ri).Line.size() == 1 && (*ci) == ' ')
+//            {
+//                *ci = ch;
+//            }
+//            else
+//            {
+//                (*ri).Line.push_back(ch);
+//                ci++;
+//            }
+//        }
+//        else
+//        {
+//            /*Lines text_line;
+//            text.push_back(text_line);*/
+//            text.push_back(Lines());
+//            ri++;
+//        }
+//    }
+//
+//    int cri = 0, cci = 0;
+//    for (auto row = text.begin();row != text.end(); row++, cri++)
+//    {
+//        if (cri == Curr_row)
+//        {
+//            ri = row;
+//            break;
+//        }
+//    }
+//    for (auto col = (*ri).Line.begin(); col != (*ri).Line.end(); col++, cci++)
+//    {
+//        if (cci == Curr_col)
+//        {
+//            ci = col;
+//            break;
+//        }
+//    }
+//}
 void CurrentFile::LoadFile()
 {
     ifstream rdr(Name);
@@ -658,31 +737,29 @@ void CurrentFile::LoadFile()
 
     Curr_row = stoi(CursorIndex.substr(0, CursorIndex.find(' ')));
     Curr_col = stoi(CursorIndex.substr(CursorIndex.find(' ') + 1, CursorIndex.length()));
-    char ch;
-    while (rdr >> ch)
+
+    string LineText;
+    while (getline(rdr, LineText))
     {
-        if (ch != '\n')
+        for (int i = 0; i < LineText.length(); i++)
         {
             if ((*ri).Line.size() == 1 && (*ci) == ' ')
             {
-                *ci = ch;
+                *ci = LineText[i];
             }
             else
             {
-                (*ri).Line.push_back(ch);
+                (*ri).Line.push_back(LineText[i]);
                 ci++;
             }
         }
-        else
-        {
-            /*Lines text_line;
-            text.push_back(text_line);*/
-            text.push_back(Lines());
-            ri++;
-        }
+        text.push_back(Lines());
+        ri++;
+        ci = (*ri).Line.begin();
     }
+
     int cri = 0, cci = 0;
-    for (auto row = text.begin();row != text.end(); row++, cri++)
+    for (auto row = text.begin(); row != text.end(); row++, cri++)
     {
         if (cri == Curr_row)
         {
@@ -737,4 +814,150 @@ void CurrentFile::DoRedo()
     }
 }
 
+void CurrentFile::AddPrefixtoWord(string word, string Prefix)
+{
+    Word W;
+    bool selected = false;
+    bool started = false;
+    for (auto row = text.begin(); row != text.end(); row++)
+    {
+        for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
+        {
+            if (!selected)
+            {
+                if (!SelectedWords.empty())
+                {
+                    W = SelectedWords.front();
+                    SelectedWords.pop();
+                    selected = true;
+                }
+            }
+            if (selected && row == W.starting_Line && col == W.start)
+            {
+                for(int i=0;i<Prefix.length();i++)
+                {
+                    (*row).Line.insert(col, Prefix[i]);
+                    //col++;
+                }
+           
+                started = false;
+                selected = false;
+                continue;
+            }
+        }
+    }
+    string NewWord = Prefix + word;
+    FindWords(NewWord);
+    HighlightWords(NewWord);
+    /*FindWords(word);
+    HighlightWords(word);*/
+}
+//void CurrentFile::AddPrefixtoWord(string word, string Prefix)
+//{
+//    Word W;
+//    bool selected = false;
+//    bool started = false;
+//    for (auto row = text.begin(); row != text.end(); row++)
+//    {
+//        for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
+//        {
+//            if (!selected)
+//            {
+//                if (!SelectedWords.empty())
+//                {
+//                    W = SelectedWords.front();
+//                    SelectedWords.pop();
+//                    selected = true;
+//                }
+//            }
+//            if (selected && row == W.starting_Line && col == W.start)
+//            {
+//                for (int i = 0; i < Prefix.length(); i++)
+//                {
+//                    (*row).Line.insert(col, Prefix[i]);
+//                    //col++;
+//                }
+//                if ((*row).Line.size() > max_col_length)
+//                {
+//                    auto CurrRow = row;
+//                    CurrRow++;
+//                    auto NextRow = CurrRow;
+//                    CurrRow--;
+//                    while (CurrRow != text.end())
+//                    {
+//                        if ((*CurrRow).Line.size() <= max_col_length)break;
+//
+//                        while ((*CurrRow).Line.size() > max_col_length)
+//                        {
+//                            char ch = (*CurrRow).Line.back();
+//                            (*CurrRow).Line.pop_back();
+//                            (*NextRow).Line.push_front(ch);
+//                        }
+//
+//                        auto Temp = NextRow;
+//                        Temp++;
+//                        if (Temp == text.end())
+//                        {
+//                            text.push_back(Lines());
+//                        }
+//
+//                        CurrRow = NextRow;
+//                        NextRow++;
+//                    }
+//                }
+//                started = false;
+//                selected = false;
+//                //continue;
+//            }
+//        }
+//    }
+//    string NewWord = Prefix + word;
+//    FindWords(NewWord);
+//    HighlightWords(NewWord);
+//    /*FindWords(word);
+//    HighlightWords(word);*/
+//}
+void CurrentFile::AddPostfixtoWord(string word, string Postfix)
+{
+    Word W;
+    bool selected = false;
+    bool started = false;
+    for (auto row = text.begin(); row != text.end(); row++)
+    {
+        for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
+        {
+            if (!selected)
+            {
+                if (!SelectedWords.empty())
+                {
+                    W = SelectedWords.front();
+                    SelectedWords.pop();
+                    selected = true;
+                }
+            }
+            if (selected && row == W.ending_Line && col == W.end)
+            {
+                auto Temp = col;
+                Temp++;
+                for (int i = 0; i < Postfix.length(); i++)
+                {
+                    (*row).Line.insert(Temp, Postfix[i]);
+                }
+
+                started = false;
+                selected = false;
+                continue;
+            }
+        }
+    }
+    string NewWord = word+Postfix;
+    FindWords(NewWord);
+    HighlightWords(NewWord);
+    /*FindWords(word);
+    HighlightWords(word);*/
+}
+int CurrentFile::SpecialCharCount()
+{
+    return 1;
+}
 
