@@ -71,48 +71,7 @@ void CurrentFile::Set_Max_and_Count(Lines& L)
     L.SetMinWordLength(min_length);
     L.SetSumOfLengths(sum_of_lengths);
 }
-void CurrentFile::ToLower()
-{
-
-    auto temp_ci = ci;
-    auto temp_ri = ri;
-    auto si = ci;
-    int cr = Curr_col;
-    while (*ci != ' ')
-    {
-        *ci = tolower(static_cast<unsigned char>(*ci));
-        ci++;
-        if (ci == (*ri).Line.end())
-        {
-            ri++;
-            if (ri == text.end())break;
-            si = (*ri).Line.begin();
-        }
-    }
-    ci = temp_ci;
-    ri = temp_ri;
-    while (*ci != ' ')
-    {
-        *ci = tolower(static_cast<unsigned char>(*ci));
-        if (ci == (*ri).Line.begin() && ri != text.begin())
-        {
-            ri--;
-            ci = (*ri).Line.end();
-            ci--;
-        }
-        else if (ci == (*ri).Line.begin() && ri == text.begin())
-        {
-            break;
-        }
-        else ci--;
-    }
-
-    ci = temp_ci; ri = temp_ri;
-
-
-
-}
-void CurrentFile::ToUpper()
+void CurrentFile::ToUpperOrLower(string cast)
 {
     
      auto temp_ci = ci;
@@ -121,7 +80,11 @@ void CurrentFile::ToUpper()
     int cr = Curr_col;
     while (*ci != ' ')
     {
+        if (cast == "upper")
         *ci = toupper(static_cast<unsigned char>(*ci));
+        else if(cast=="lower")
+            *ci = tolower(static_cast<unsigned char>(*ci));
+
         ci++;
         if (ci == (*ri).Line.end())
         {
@@ -134,7 +97,11 @@ void CurrentFile::ToUpper()
     ri = temp_ri;
     while (*ci != ' ')
     {
-        *ci = toupper(static_cast<unsigned char>(*ci));
+        if (cast == "upper")
+            *ci = toupper(static_cast<unsigned char>(*ci));
+        else if (cast == "lower")
+            *ci = tolower(static_cast<unsigned char>(*ci));
+
         if (ci == (*ri).Line.begin() && ri != text.begin())
         {
             ri--;
@@ -432,13 +399,14 @@ void CurrentFile::Insert()
         }
         else if (key == 21)
         {//Ctrl+U
-
-            ToUpper();
+            
+            ToUpperOrLower("upper");
         }
         else if (key == 12)
         {//Ctrl+L
 
-            ToLower();
+            ToUpperOrLower("lower");
+
         }
         else if (key == 9)
         {//tab+f to find

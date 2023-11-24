@@ -172,7 +172,6 @@ class CurrentFile
 	 int GetParagraphCount();
 	 void FindWords(string name);
 	 void HighlightWords(string name);
-	 void ToUpper();
-	 void ToLower();
+	 void ToUpperOrLower(string cast);
 };
 
