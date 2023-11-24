@@ -13,7 +13,7 @@ CurrentFile::CurrentFile(string FileName)
     ri = text.begin();
     ci = (*ri).Line.begin();
     Name = FileName;
-    max_col_length = 50;//
+    max_col_length = 20;//
     finding = false;
     SearchBox = new RectShape(25,2,4,120,0);
 }
@@ -185,7 +185,71 @@ void CurrentFile::FindWords(string name)
     }
 
 }
+void CurrentFile::FindFirstAppearance(string name)
+{
+    int i = 1; auto start = (*text.begin()).Line.begin();
+    auto st_line = text.begin();
+    auto end_line = text.begin();
+    auto end = start; bool started = false; bool completed = false;
+    string temp = "";
+    Word W;
+    for (auto ri = text.begin(); ri != text.end(); ri++)
+    {
+        for (auto ci = (*ri).Line.begin(); ci != (*ri).Line.end(); ci++)
+        {
+            if (*ci == name[0] && !started)
+            {
+                temp += *ci;
+                start = ci;
+                st_line = ri;
+                if (name != temp)
+                    started = true;
+                else
+                {
+                    end = ci;
+                    end_line = ri;
+                    W.start = start;
+                    W.end = end;
+                    W.starting_Line = st_line;
+                    W.ending_Line = end_line;
+                    SelectedWords.push(W);
+                    return;
+                }
+                continue;
+            }
+            if (*ci != name[i])
+            {
+                started = false; completed = false;
+                temp = "";
+                i = 1;
+            }
+            if (started)
+            {
+                temp += *ci;
+                i++;
+                if (temp.length() == name.length())
+                {
+                    if (temp == name)
+                    {
+                        end = ci;
+                        end_line = ri;
+                        W.start = start;
+                        W.end = end;
+                        W.starting_Line = st_line;
+                        W.ending_Line = end_line;
+                        SelectedWords.push(W);
+                        return;
+                    }
+                    started = false;
+                    temp = "";
+                    i = 1;
+                }
+            }
 
+        }
+    }
+
+}
 void CurrentFile::Print()
 {
     SetClr(255);
@@ -282,10 +346,9 @@ void CurrentFile::HighlightWords(string name)
                 }
             }
 
-            if (*c != ' ' && selected && i==W.starting_Line&&c == W.start)
+            if (selected && i==W.starting_Line&&c == W.start)
                 started = true;
-
-            if (*c != ' ' &&selected&& started&&i==W.ending_Line && c == W.end)
+            if (selected&& started&&i==W.ending_Line && c == W.end)
             {
                 SetClr(176);
                 gotoRowCol(ri, ci);
@@ -314,7 +377,6 @@ void CurrentFile::HighlightWords(string name)
     cout << name;
     SetClr(240);
     gotoRowCol(Curr_row, Curr_col);
-
 }
 float  CurrentFile::GetAvgWordLength()
 {
@@ -445,12 +507,9 @@ void CurrentFile::Insert()
                 gotoRowCol(P.ri, P.ci + 1);
                 SetClr(15);
                 getline(cin, fname);
-                FindWords("is");
-                if (!SelectedWords.empty())
-                {
-                    finding = true;
-                    AddPrefixtoWord("is", fname);
-                }
+                finding = true;
+                AddPrefixtoWord("is", fname);
+                
             }
             if (c == 115)//tab+s to addpostfix
             {
@@ -459,12 +518,9 @@ void CurrentFile::Insert()
                 gotoRowCol(P.ri, P.ci + 1);
                 SetClr(15);
                 getline(cin, fname);
-                FindWords("is");
-                if (!SelectedWords.empty())
-                {
-                    finding = true;
-                    AddPostfixtoWord("is", fname);
-                }
+                finding = true;
+                AddPostfixtoWord("is", fname);
+                
             }
         }
         else if (key == 8) 
@@ -827,44 +883,6 @@ void CurrentFile::DoRedo()
     }
 }
 
-void CurrentFile::AddPrefixtoWord(string word, string Prefix)
-{
-    Word W;
-    bool selected = false;
-    bool started = false;
-    for (auto row = text.begin(); row != text.end(); row++)
-    {
-        for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
-        {
-            if (!selected)
-            {
-                if (!SelectedWords.empty())
-                {
-                    W = SelectedWords.front();
-                    SelectedWords.pop();
-                    selected = true;
-                }
-            }
-            if (selected && row == W.starting_Line && col == W.start)
-            {
-                for(int i=0;i<Prefix.length();i++)
-                {
-                    (*row).Line.insert(col, Prefix[i]);
-                    //col++;
-                }
-           
-                started = false;
-                selected = false;
-                continue;
-            }
-        }
-    }
-    string NewWord = Prefix + word;
-    FindWords(NewWord);
-    HighlightWords(NewWord);
-    /*FindWords(word);
-    HighlightWords(word);*/
-}
 //void CurrentFile::AddPrefixtoWord(string word, string Prefix)
 //{
 //    Word W;
@@ -885,42 +903,15 @@ void CurrentFile::AddPrefixtoWord(string word, string Prefix)
 //            }
 //            if (selected && row == W.starting_Line && col == W.start)
 //            {
-//                for (int i = 0; i < Prefix.length(); i++)
+//                for(int i=0;i<Prefix.length();i++)
 //                {
 //                    (*row).Line.insert(col, Prefix[i]);
 //                    //col++;
 //                }
-//                if ((*row).Line.size() > max_col_length)
-//                {
-//                    auto CurrRow = row;
-//                    CurrRow++;
-//                    auto NextRow = CurrRow;
-//                    CurrRow--;
-//                    while (CurrRow != text.end())
-//                    {
-//                        if ((*CurrRow).Line.size() <= max_col_length)break;
-//
-//                        while ((*CurrRow).Line.size() > max_col_length)
-//                        {
-//                            char ch = (*CurrRow).Line.back();
-//                            (*CurrRow).Line.pop_back();
-//                            (*NextRow).Line.push_front(ch);
-//                        }
-//
-//                        auto Temp = NextRow;
-//                        Temp++;
-//                        if (Temp == text.end())
-//                        {
-//                            text.push_back(Lines());
-//                        }
-//
-//                        CurrRow = NextRow;
-//                        NextRow++;
-//                    }
-//                }
+//           
 //                started = false;
 //                selected = false;
-//                //continue;
+//                continue;
 //            }
 //        }
 //    }
@@ -930,13 +921,104 @@ void CurrentFile::AddPrefixtoWord(string word, string Prefix)
 //    /*FindWords(word);
 //    HighlightWords(word);*/
 //}
-void CurrentFile::AddPostfixtoWord(string word, string Postfix)
+void CurrentFile::AddPrefixtoWord(string word, string Prefix)
 {
+    if (word[0] != ' ')word.insert(word.begin(), ' ');
     Word W;
     bool selected = false;
     bool started = false;
+    bool done = false;
+    FindFirstAppearance(word);
     for (auto row = text.begin(); row != text.end(); row++)
     {
+        if (done)break;
+        for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
+        {
+            if (!selected)
+            { 
+                if (!SelectedWords.empty())
+                {
+                    W=SelectedWords.front();
+                    SelectedWords.pop();
+                    selected = true;
+                }
+            }
+            if (selected  && row == W.starting_Line && col == W.start)
+            {
+                auto temp = col;
+                temp++;
+                for (int i = 0; i < Prefix.length(); i++)
+                {
+                 
+                    (*row).Line.insert(temp, Prefix[i]);
+                    //col++;
+                }
+                if ((*row).Line.size() > max_col_length)
+                {
+                    auto CurrRow = row;                    
+                    auto NextRow = row;
+                    NextRow++;
+                    while (NextRow!= text.end())
+                    {
+
+                        while ((*CurrRow).Line.size() > max_col_length)
+                        {
+                            char ch = (*CurrRow).Line.back();
+                            (*CurrRow).Line.pop_back();
+                            (*NextRow).Line.push_front(ch);
+                        }                   
+                        if ((*NextRow).Line.size() <= max_col_length)
+                            break;
+                        CurrRow = NextRow;
+                        NextRow++;
+                    }
+                    if (NextRow == text.end())
+                    {
+                            Lines L;
+                            text.insert(NextRow,L);
+                            NextRow--;
+                            while ((*CurrRow).Line.size() > max_col_length)
+                            {
+                                char ch = (*CurrRow).Line.back();
+                                (*CurrRow).Line.pop_back();
+                                (*NextRow).Line.push_front(ch);
+                            }                    
+                    }
+
+                }
+                started = false;
+                selected = false;
+                FindFirstAppearance(word);
+                if (SelectedWords.empty())
+                {
+                    done = true;
+                    break;
+                }
+                //continue;
+            }
+        }
+    }
+    Curr_col = (*ri).Line.size();
+    ci = (*ri).Line.end();
+    ci--;
+    word.erase(word.begin());
+    string NewWord = Prefix + word;
+    FindWords(NewWord);
+    HighlightWords(NewWord);
+    /*FindWords(word);
+    HighlightWords(word);*/
+}
+void CurrentFile::AddPostfixtoWord(string word, string Postfix)
+{
+    if (word.back() != ' ')word.push_back(' ');
+    Word W;
+    bool selected = false;
+    bool started = false;
+    bool done = false;
+    FindFirstAppearance(word);
+    for (auto row = text.begin(); row != text.end(); row++)
+    {
+        if (done)break;
         for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
         {
             if (!selected)
@@ -950,22 +1032,66 @@ void CurrentFile::AddPostfixtoWord(string word, string Postfix)
             }
             if (selected && row == W.ending_Line && col == W.end)
             {
-                auto Temp = col;
-                Temp++;
+                
                 for (int i = 0; i < Postfix.length(); i++)
                 {
-                    (*row).Line.insert(Temp, Postfix[i]);
-                }
 
+                    (*row).Line.insert(col, Postfix[i]);
+                    //col++;
+                }
+                if ((*row).Line.size() > max_col_length)
+                {
+                    auto CurrRow = row;
+                    auto NextRow = row;
+                    NextRow++;
+                    while (NextRow != text.end())
+                    {
+
+                        while ((*CurrRow).Line.size() > max_col_length)
+                        {
+                            char ch = (*CurrRow).Line.back();
+                            (*CurrRow).Line.pop_back();
+                            (*NextRow).Line.push_front(ch);
+                        }
+                        if ((*NextRow).Line.size() <= max_col_length)
+                            break;
+                        CurrRow = NextRow;
+                        NextRow++;
+                    }
+                    if (NextRow == text.end())
+                    {
+                        Lines L;
+                        text.insert(NextRow, L);
+                        NextRow--;
+                        while ((*CurrRow).Line.size() > max_col_length)
+                        {
+                            char ch = (*CurrRow).Line.back();
+                            (*CurrRow).Line.pop_back();
+                            (*NextRow).Line.push_front(ch);
+                        }
+                    }
+
+                }
                 started = false;
                 selected = false;
-                continue;
+                FindFirstAppearance(word);
+                if (SelectedWords.empty())
+                {
+                    done = true;
+                    break;
+                }
+                //continue;
             }
         }
     }
-    string NewWord = word + Postfix;
+    Curr_col = (*ri).Line.size();
+    ci = (*ri).Line.end();
+    ci--;
+    word.pop_back();
+    string NewWord = word+Postfix;
     FindWords(NewWord);
     HighlightWords(NewWord);
+
 }
 int CurrentFile::SpecialCharCount()
 {
