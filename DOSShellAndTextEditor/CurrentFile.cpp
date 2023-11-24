@@ -13,9 +13,9 @@ CurrentFile::CurrentFile(string FileName)
     ri = text.begin();
     ci = (*ri).Line.begin();
     Name = FileName;
-    max_col_length = 40;//
+    max_col_length = 50;//
     finding = false;
-    SearchBox = new RectShape(20,2,4,120,0);
+    SearchBox = new RectShape(25,2,4,120,0);
 }
 void CurrentFile::Set_Max_and_Count(Lines& L)
 {
@@ -191,18 +191,18 @@ void CurrentFile::Print()
 //    cout << "ParaGrapgh Count : " << GetParagraphCount();
 //    gotoRowCol(Curr_row, Curr_col);
 //}
-void CurrentFile::HighlightWords()
+void CurrentFile::HighlightWords(string name)
 {
     SetClr(255);
     system("cls");
-    int ri = 0; int ci = 0;
+    int ri = 0;
     Word W;
     bool started = false;
     bool selected = false;
     
     for (auto i = text.begin(); i != text.end(); i++, ri++)
     {
-        
+        int ci = 0;
         for (auto c = (*i).Line.begin(); c != (*i).Line.end(); c++, ci++)
         {
 
@@ -216,14 +216,12 @@ void CurrentFile::HighlightWords()
                 }
             }
 
-            if (*c!=' '&&selected && c == W.start)
+            if (*c != ' ' && selected && i==W.starting_Line&&c
+                == W.start)
                 started = true;
-            if(started)
-                SetClr(4);
-            else
-                SetClr(240);
 
-            if (*c != ' ' &&selected&& started&&c == W.end)
+            else if (*c != ' ' &&selected&& started&&i==W.ending_Line && c == 
+                W.end)
             {
                 gotoRowCol(ri, ci);
                 cout << *c;
@@ -231,6 +229,10 @@ void CurrentFile::HighlightWords()
                 selected = false;
                 continue;
             }
+            if (started)
+                SetClr(176);
+            else
+                SetClr(240);
             gotoRowCol(ri, ci);
             cout << *c;
         }
@@ -241,7 +243,12 @@ void CurrentFile::HighlightWords()
     cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
     gotoRowCol(2, 120);
     cout << "ParaGrapgh Count : " << GetParagraphCount();
+    gotoRowCol(SearchBox->GetPOsition().ri, SearchBox->GetPOsition().ci);
+    SetClr(15);
+    cout << name;
+    SetClr(240);
     gotoRowCol(Curr_row, Curr_col);
+
 }
 float  CurrentFile::GetAvgWordLength()
 {
@@ -351,6 +358,8 @@ void CurrentFile::Insert()
                 FindWords(fname);
                 if(!SelectedWords.empty())
                 finding = true;
+                HighlightWords(fname);
+
             }
         }
 
@@ -559,9 +568,8 @@ void CurrentFile::Insert()
                 
            // SaveState();
         }
-        if(finding)
-        HighlightWords();
-        else Print();
+        if(!finding)
+         Print();
 }
 }
 

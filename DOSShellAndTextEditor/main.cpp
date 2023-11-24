@@ -47,5 +47,12 @@ int main()
     	}*/
     CurrentFile* file= new CurrentFile("file1.txt");
     file->Insert();
+    
+    /*for (int i = 0; i < 255; i++)
+    {
+        SetClr(i);
+        cout << i << endl;
+    }*/
+    
     return 0;
 }

@@ -171,6 +171,6 @@ class CurrentFile
 	 float GetAvgWordLength();
 	 int GetParagraphCount();
 	 void FindWords(string name);
-	 void HighlightWords();
+	 void HighlightWords(string name);
 };
 
