@@ -177,6 +177,7 @@ class CurrentFile
 	 void ToUpperOrLower(string cast);
 	 void AddPrefixtoWord(string word, string Prefix);
 	 void AddPostfixtoWord(string word, string Postfix);
+	 void FindandReplace(string word, string Postfix);
 	 int SpecialCharCount();
 	 void FindFirstAppearance(string name);
 

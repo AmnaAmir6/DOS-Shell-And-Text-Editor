@@ -518,8 +518,9 @@ void CurrentFile::Insert()
                 SetClr(15);
                 getline(cin, fname);
                 finding = true;
-                AddPrefixtoWord("moqeet", fname);
-                
+                FindandReplace("moqeet", fname);
+                //AddPrefixtoWord("moqeet", fname);
+
             }
             if (c == 115)//tab+s to addpostfix
             {
@@ -1183,4 +1184,133 @@ int CurrentFile::SpecialCharCount()
     }
     return count;
 }
+void CurrentFile::FindandReplace(string word, string RP_word)
+{
+    if (word.back() != ' ')word.push_back(' ');
+    if (word[0] != ' ')word.insert(word.begin(), ' ');
+    Word W;
+    bool selected = false;
+    bool started = false;
+    bool done = false;
+    bool changes_made = false;
+    auto st = (*text.begin()).Line.begin();
+    if (*st != ' ')
+        (*text.begin()).Line.insert(st, ' ');
+    auto r_end = text.end(); r_end--;
+    auto c_end = ((*r_end).Line.end());
+    c_end--;
+    if (*c_end != ' ')
+    {
+        c_end++;
+        (*r_end).Line.insert(c_end, ' ');
+        if ((*r_end).Line.size() > max_col_length)
+        {
+            text.push_back(Lines());
+            auto b = (*r_end).Line.back();
+            (*r_end).Line.pop_back();
+            r_end++;
+            (*r_end).Line.push_back(b);
+        }
+    }
+    FindFirstAppearance(word);
+    if (SelectedWords.empty())
+        changes_made = true;
+
+    for (auto row = text.begin(); row != text.end(); row++)
+    {
+        if (done)break;
+        for (auto col = (*row).Line.begin(); col != (*row).Line.end(); col++)
+        {
+            if (!selected)
+            {
+                if (!SelectedWords.empty())
+                {
+                    W = SelectedWords.front();
+                    SelectedWords.pop();
+                    selected = true;
+                }
+            }
+            if (selected && row == W.starting_Line && col == W.start)
+            {
+                auto temp = col;
+                temp++;
+                for (int i = 0; i < RP_word.length(); i++)
+                {
+
+                    (*row).Line.insert(temp, RP_word[i]);
+                    //col++;
+                }
+                auto tci = temp;                
+                auto tri = row;
+                while (tri != text.end())
+                {
+                    auto pc = tci;
+                    tci++;
+                    (*tri).Line.erase(pc);
+                    if (tci == (*tri).Line.end())
+                    {
+                        tri++;
+                        tci = (*tri).Line.begin();
+                    }
+                    if (tri == W.ending_Line && tci == W.end)
+                    {
+                        (*tri).Line.erase(tci);
+                        break;
+                    }
+                }
+
+                if ((*row).Line.size() > max_col_length)
+                {
+                    auto CurrRow = row;
+                    auto NextRow = row;
+                    NextRow++;
+                    while (NextRow != text.end())
+                    {
+
+                        while ((*CurrRow).Line.size() > max_col_length)
+                        {
+                            char ch = (*CurrRow).Line.back();
+                            (*CurrRow).Line.pop_back();
+                            (*NextRow).Line.push_front(ch);
+                        }
+                        if ((*NextRow).Line.size() <= max_col_length)
+                            break;
+                        CurrRow = NextRow;
+                        NextRow++;
+                    }
+                    if (NextRow == text.end())
+                    {
+                        Lines L;
+                        text.insert(NextRow, L);
+                        NextRow--;
+                        while ((*CurrRow).Line.size() > max_col_length)
+                        {
+                            char ch = (*CurrRow).Line.back();
+                            (*CurrRow).Line.pop_back();
+                            (*NextRow).Line.push_front(ch);
+                        }
+                    }
+
+                }
+                started = false;
+                selected = false;
+                FindFirstAppearance(word);
+                if (SelectedWords.empty())
+                {
+                    done = true;
+                    break;
+                }
+                //continue;
+            }
+        }
+    }
+    if ((*text.begin()).Line.front() == ' ' && (*text.begin()).Line.size() > 1)
+        (*text.begin()).Line.pop_front();
+    Curr_col = (*ri).Line.size();
+    ci = (*ri).Line.end();
+    ci--;
+    FindWords(RP_word);
+    HighlightWords(RP_word, changes_made);
+}
+
 
