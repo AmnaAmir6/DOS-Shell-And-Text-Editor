@@ -158,6 +158,7 @@ class CurrentFile
 	RectShape* SearchBox;
 	queue<Word> SelectedWords;
 	bool finding;
+	bool replacing;
  public:
 
 	 CurrentFile(string FileName);
@@ -180,6 +181,7 @@ class CurrentFile
 	 void FindandReplace(string word, string Postfix);
 	 int SpecialCharCount();
 	 void FindFirstAppearance(string name);
-
+	 void Rearrange();
+	 void RearrangeAll();
 };
 
