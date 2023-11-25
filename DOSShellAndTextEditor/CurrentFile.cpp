@@ -470,7 +470,7 @@ void CurrentFile::Insert()
         key = _getch(); 
         if(!replacing)
         {
-            if (key != 9)finding = false;
+            finding = false;
         }
 
         if (key == 13)//enter key
@@ -1125,6 +1125,7 @@ void CurrentFile::AddPrefixtoWord(string word, string Prefix)
         (*text.begin()).Line.pop_front();
     Curr_col = (*ri).Line.size();
     ci = (*ri).Line.end();
+    if (ci != (*ri).Line.begin())
     ci--;
     word.erase(word.begin());
     string NewWord = Prefix + word;
@@ -1238,6 +1239,7 @@ void CurrentFile::AddPostfixtoWord(string word, string Postfix)
         (*text.begin()).Line.pop_front();
     Curr_col = (*ri).Line.size();
     ci = (*ri).Line.end();
+    if (ci != (*ri).Line.begin())
     ci--;
     word.erase(word.begin());
     word.pop_back();
@@ -1442,7 +1444,7 @@ void CurrentFile::FindandReplace(string word, string RP_word)
                     if (tri != text.end())
                         tci = (*tri).Line.begin();
                 }
-                if (W.start == W.end)
+                if (W.starting_Line==W.ending_Line&& W.start == W.end)
                  (*tri).Line.erase(tci);
                  else
                 {
@@ -1482,6 +1484,7 @@ void CurrentFile::FindandReplace(string word, string RP_word)
     ri--;
     Curr_col = (*ri).Line.size();
     ci = (*ri).Line.end();
+    if(ci!=(*ri).Line.begin())
     ci--;
     FindWords(RP_word);
     HighlightWords(RP_word, changes_made);
