@@ -1442,27 +1442,27 @@ void CurrentFile::FindandReplace(string word, string RP_word)
                     if (tri != text.end())
                         tci = (*tri).Line.begin();
                 }
-                while (tri != text.end())
+                if (W.start == W.end)
+                 (*tri).Line.erase(tci);
+                 else
                 {
-                    auto pc = tci;
-                    tci++;
-                    if(W.start==W.end)
+                    while (tri != text.end())
                     {
+                        auto pc = tci;
+                        tci++;
                         (*tri).Line.erase(pc);
-                        break;
-                    }
-                    (*tri).Line.erase(pc);                    
-                    if (tci == (*tri).Line.end())
-                    {
-                        tri++;
-                        if (tri == text.end())break;
-                        tci = (*tri).Line.begin();
-                    }
+                        if (tci == (*tri).Line.end())
+                        {
+                            tri++;
+                            if (tri == text.end())break;
+                            tci = (*tri).Line.begin();
+                        }
 
-                    if (tri == W.ending_Line && tci == W.end)
-                    {
-                        (*tri).Line.erase(tci);
-                        break;
+                        if (tri == W.ending_Line && tci == W.end)
+                        {
+                            (*tri).Line.erase(tci);
+                            break;
+                        }
                     }
                 }
 
