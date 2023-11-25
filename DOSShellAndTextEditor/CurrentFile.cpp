@@ -1398,7 +1398,6 @@ int CurrentFile::SpecialCharCount()
 //    FindWords(RP_word);
 //    HighlightWords(RP_word, changes_made);
 //}
-
 void CurrentFile::FindandReplace(string word, string RP_word)
 {
     Word W;
@@ -1447,7 +1446,12 @@ void CurrentFile::FindandReplace(string word, string RP_word)
                 {
                     auto pc = tci;
                     tci++;
-                    (*tri).Line.erase(pc);
+                    if(W.start==W.end)
+                    {
+                        (*tri).Line.erase(pc);
+                        break;
+                    }
+                    (*tri).Line.erase(pc);                    
                     if (tci == (*tri).Line.end())
                     {
                         tri++;
@@ -1473,11 +1477,12 @@ void CurrentFile::FindandReplace(string word, string RP_word)
             }
         }
     }
+    RearrangeAll();
+    ri = text.end();
+    ri--;
     Curr_col = (*ri).Line.size();
     ci = (*ri).Line.end();
     ci--;
-    RearrangeAll();
-    
     FindWords(RP_word);
     HighlightWords(RP_word, changes_made);
 }
