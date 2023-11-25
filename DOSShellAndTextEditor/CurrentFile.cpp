@@ -321,7 +321,7 @@ void CurrentFile::Print()
 //    cout << "ParaGrapgh Count : " << GetParagraphCount();
 //    gotoRowCol(Curr_row, Curr_col);
 //}
-void CurrentFile::HighlightWords(string name)
+void CurrentFile::HighlightWords(string name,bool changes_made)
 {
     SetClr(255);
     system("cls");
@@ -372,7 +372,14 @@ void CurrentFile::HighlightWords(string name)
     cout << "AVERAGE WORD LENGTH : " << GetAvgWordLength();
     gotoRowCol(2, 120);
     cout << "ParaGrapgh Count : " << GetParagraphCount();       
-    gotoRowCol(SearchBox->GetPOsition().ri, SearchBox->GetPOsition().ci);
+        pos P;
+        P = SearchBox->GetPOsition();
+    if(changes_made)
+    {
+        gotoRowCol(P.ri + 3, P.ci + 2);
+        cout << "No changes were made!";
+    }
+    gotoRowCol(P.ri, P.ci);
     SetClr(15);
     cout << name;
     SetClr(240);
@@ -412,6 +419,7 @@ void CurrentFile::Insert()
 	SetClr(255);
     system("cls");
 	char key = {};
+    Print();
     while (true) 
     {
         /*
@@ -510,7 +518,7 @@ void CurrentFile::Insert()
                 SetClr(15);
                 getline(cin, fname);
                 finding = true;
-                AddPrefixtoWord("is", fname);
+                AddPrefixtoWord("moqeet", fname);
                 
             }
             if (c == 115)//tab+s to addpostfix
@@ -521,7 +529,7 @@ void CurrentFile::Insert()
                 SetClr(15);
                 getline(cin, fname);
                 finding = true;
-                AddPostfixtoWord("is", fname);
+                AddPostfixtoWord("abdul", fname);
                 
             }
         }
@@ -897,7 +905,6 @@ void CurrentFile::DoRedo()
         LoadState(S);
     }
 }
-
 //void CurrentFile::AddPrefixtoWord(string word, string Prefix)
 //{
 //    Word W;
@@ -938,12 +945,36 @@ void CurrentFile::DoRedo()
 //}
 void CurrentFile::AddPrefixtoWord(string word, string Prefix)
 {
+    if (word.back() != ' ')word.push_back(' ');
     if (word[0] != ' ')word.insert(word.begin(), ' ');
     Word W;
     bool selected = false;
     bool started = false;
     bool done = false;
-    FindFirstAppearance(word);
+    bool changes_made = false;
+    auto st = (*text.begin()).Line.begin();
+    if (*st != ' ')
+        (*text.begin()).Line.insert(st,' ');
+    auto r_end = text.end(); r_end--;
+    auto c_end = ((*r_end).Line.end());
+    c_end--;
+    if (*c_end != ' ')
+    {
+        c_end++;
+        (*r_end).Line.insert(c_end, ' ');
+        if ((*r_end).Line.size() > max_col_length)
+        {
+            text.push_back(Lines());
+            auto b = (*r_end).Line.back();
+            (*r_end).Line.pop_back();
+            r_end++;
+            (*r_end).Line.push_back(b);
+        }
+    }
+        FindFirstAppearance(word);
+        if (SelectedWords.empty())
+            changes_made = true;
+
     for (auto row = text.begin(); row != text.end(); row++)
     {
         if (done)break;
@@ -1013,24 +1044,51 @@ void CurrentFile::AddPrefixtoWord(string word, string Prefix)
             }
         }
     }
+    if ((*text.begin()).Line.front() == ' ' && (*text.begin()).Line.size() > 1)
+        (*text.begin()).Line.pop_front();
     Curr_col = (*ri).Line.size();
     ci = (*ri).Line.end();
     ci--;
     word.erase(word.begin());
     string NewWord = Prefix + word;
     FindWords(NewWord);
-    HighlightWords(NewWord);
+    HighlightWords(NewWord,changes_made);
     /*FindWords(word);
     HighlightWords(word);*/
 }
 void CurrentFile::AddPostfixtoWord(string word, string Postfix)
 {
     if (word.back() != ' ')word.push_back(' ');
+    if (word[0] != ' ')word.insert(word.begin(), ' ');
     Word W;
     bool selected = false;
     bool started = false;
     bool done = false;
+    bool changes_made = false;
+    auto st = (*text.begin()).Line.begin();
+    if (*st != ' ')
+        (*text.begin()).Line.insert(st, ' ');
+    auto r_end = text.end(); r_end--;
+    auto c_end = ((*r_end).Line.end());
+    c_end--;
+    if (*c_end != ' ')
+    {
+        c_end++;
+        (*r_end).Line.insert(c_end, ' ');
+        if ((*r_end).Line.size() > max_col_length)
+        {
+            text.push_back(Lines());
+            auto b = (*r_end).Line.back();
+            (*r_end).Line.pop_back();
+            r_end++;
+            (*r_end).Line.push_back(b);
+        }
+    }
     FindFirstAppearance(word);
+    if (SelectedWords.empty())
+    {
+        changes_made = true;
+    }
     for (auto row = text.begin(); row != text.end(); row++)
     {
         if (done)break;
@@ -1099,13 +1157,16 @@ void CurrentFile::AddPostfixtoWord(string word, string Postfix)
             }
         }
     }
+    if ((*text.begin()).Line.front() == ' ' && (*text.begin()).Line.size() > 1)
+        (*text.begin()).Line.pop_front();
     Curr_col = (*ri).Line.size();
     ci = (*ri).Line.end();
     ci--;
+    word.erase(word.begin());
     word.pop_back();
     string NewWord = word+Postfix;
     FindWords(NewWord);
-    HighlightWords(NewWord);
+    HighlightWords(NewWord,changes_made);
 
 }
 int CurrentFile::SpecialCharCount()

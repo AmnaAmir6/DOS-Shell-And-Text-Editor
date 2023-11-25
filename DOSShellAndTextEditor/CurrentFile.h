@@ -173,7 +173,7 @@ class CurrentFile
 	 float GetAvgWordLength();
 	 int GetParagraphCount();
 	 void FindWords(string name);
-	 void HighlightWords(string name);
+	 void HighlightWords(string name,bool changes_made=false);
 	 void ToUpperOrLower(string cast);
 	 void AddPrefixtoWord(string word, string Prefix);
 	 void AddPostfixtoWord(string word, string Postfix);
