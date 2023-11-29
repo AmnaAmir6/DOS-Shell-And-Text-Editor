@@ -1488,6 +1488,7 @@ void CurrentFile::FindandReplace(string word, string RP_word)
     if (ci != (*ri).Line.begin())
         ci--;
     else Curr_col = 0;
+    Curr_row = text.size()-1;
     FindWords(RP_word);
     HighlightWords(RP_word, changes_made);
 }
