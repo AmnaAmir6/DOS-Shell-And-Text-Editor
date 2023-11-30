@@ -774,6 +774,7 @@ void CurrentFile::Insert()
         if(!finding)
         {
             Print();
+            SaveState();
         }
 }
 }
@@ -946,9 +947,12 @@ void CurrentFile::LoadState(const FileState& S)
     text = S.text;
     Curr_row = S.CRow;
     Curr_col = S.CCol;
-    ri = S.RowIndex;
-    ci = S.ColIndex;
+    int r = 0, c = 0;
+    for (ri = text.begin(); r != Curr_row && ri != text.end(); ri++, r++)
+        cout << r << endl;
     
+    for (ci = (*ri).Line.begin(); c != Curr_col-1 && ci != (*ri).Line.end(); ci++, c++)
+        cout << c << endl;
 }
 //void CurrentFile::DoUndo()
 //{
@@ -965,11 +969,14 @@ void CurrentFile::DoUndo()
 {
     if (!Undo.empty())
     {
-        FileState *CState= new FileState(*this);
-        Redo.push(*CState);
+        //FileState *CState= new FileState(*this);
+        //Redo.push(*CState);
+        Redo.push(Undo.back());
+        Undo.pop_back();
         auto S = Undo.back();
         LoadState(S);
         Undo.pop_back();//this is deleting the object S
+        Print();
     }
 }
 void CurrentFile::DoRedo()
@@ -980,6 +987,7 @@ void CurrentFile::DoRedo()
         Undo.push_back(S);
         Redo.pop();
         LoadState(S);
+        Print();
     }
 }
 //void CurrentFile::AddPrefixtoWord(string word, string Prefix)
