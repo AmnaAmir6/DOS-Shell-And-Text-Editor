@@ -1,5 +1,9 @@
-#include "DOS.h"
+#include "DOS_bscs22147_059.h"
+#include"utility_bscs22147_059.h"
+#include"Folder_bscs22147_059.h"
+#include"File_bscs22147_059.h" 
 #include<vector>
+#include<string>
 #include<ios>
 DOS::DOS()
 {

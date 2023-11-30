@@ -1,4 +1,12 @@
-#include "utility.h"
+
+#include"CurrentFile_bscs22147_059.h"
+#include"DOS_bscs22147_059.h"
+#include"File_bscs22147_059.h"
+#include"Folder_bscs22147_059.h"
+#include"Lines_bscs22147_059.h"
+#include"TextEditor_bscs22147_059.h"
+#include"Tree_bscs22147_059.h"
+#include "utility_bscs22147_059.h"
 #include<iostream>
 using namespace std;
 void gotoRowCol(int rpos, int cpos)

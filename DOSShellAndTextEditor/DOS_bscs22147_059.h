@@ -2,10 +2,11 @@
 #include<iostream>
 #include<string>
 #include<iomanip>
+#include"utility_bscs22147_059.h"
+#include"Tree_bscs22147_059.h"
+#include"File_bscs22147_059.h"
 using namespace std;
 
-#include"Folder.h"
-#include"Tree.h"
 
 class DOS
 {

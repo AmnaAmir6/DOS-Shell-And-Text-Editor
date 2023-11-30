@@ -15,60 +15,60 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Folder.h">
+    <ClInclude Include="Folder_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="File.h">
+    <ClInclude Include="File_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DOS.h">
+    <ClInclude Include="DOS_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Tree.h">
+    <ClInclude Include="Tree_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CurrentFile.h">
+    <ClInclude Include="CurrentFile_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Lines.h">
+    <ClInclude Include="Lines_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TextEditor.h">
+    <ClInclude Include="TextEditor_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="utility.h">
+    <ClInclude Include="utility_bscs22147_059.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Folder.cpp">
+    <ClCompile Include="Folder_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="File.cpp">
+    <ClCompile Include="File_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="main_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="DOS.cpp">
+    <ClCompile Include="DOS_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Tree.cpp">
+    <ClCompile Include="Tree_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CurrentFile.cpp">
+    <ClCompile Include="CurrentFile_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Lines.cpp">
+    <ClCompile Include="Lines_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TextEditor.cpp">
+    <ClCompile Include="TextEditor_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="utility.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Source.cpp">
+    <ClCompile Include="Source_bscs22147_059.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

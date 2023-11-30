@@ -1,7 +1,8 @@
-#include "Tree.h"
+#include "Tree_bscs22147_059.h"
 #include<iostream>
 #include<fstream>
-#include"Folder.h"
+#include"Folder_bscs22147_059.h"
+#include"File_bscs22147_059.h"
 using namespace std;
 
 Tree::Tree()

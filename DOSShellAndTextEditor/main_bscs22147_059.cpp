@@ -1,5 +1,5 @@
 #include<iostream>
-#include"Folder.h"
+#include"Folder_bscs22147_059.h"
 #include<time.h>
 #include<conio.h>
 #include<windows.h>
@@ -7,8 +7,8 @@
 #include<vector>
 #include <chrono>   // For std::chrono::seconds
 #include <thread>   // F
-#include"DOS.h"
-#include"CurrentFile.h"
+#include"DOS_bscs22147_059.h"
+#include"CurrentFile_bscs22147_059.h"
 using namespace std;
 int mwain()
 {
