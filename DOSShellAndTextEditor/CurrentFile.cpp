@@ -299,6 +299,7 @@ void CurrentFile::Print()
     int ri = 0;
     for (auto i = text.begin(); i != text.end(); i++,ri++)
     {
+        //if(i==this->ri)
         (*i).PrintLine(ri);
         //cout<<"max "<<(*i).GetLongestWordLength() << " WC " << (*i).GetWord_Count()<<" min "<<(*i).GetMinWordLength()<< endl;
     }
@@ -1492,8 +1493,10 @@ void CurrentFile::FindandReplace(string word, string RP_word)
     ri--;
     Curr_col = (*ri).Line.size();
     ci = (*ri).Line.end();
-    if(ci!=(*ri).Line.begin())
-    ci--;
+    if (ci != (*ri).Line.begin())
+        ci--;
+    else Curr_col = 0;
+    Curr_row = text.size()-1;
     FindWords(RP_word);
     HighlightWords(RP_word, changes_made);
 }
