@@ -948,11 +948,11 @@ void CurrentFile::LoadState(const FileState& S)
     Curr_row = S.CRow;
     Curr_col = S.CCol;
     int r = 0, c = 0;
-    for (ri = text.begin(); r != Curr_row && ri != text.end(); ri++, r++)
-        cout << r << endl;
+    for (ri = text.begin(); r != Curr_row && ri != text.end(); ri++, r++);
+        
     
-    for (ci = (*ri).Line.begin(); c != Curr_col-1 && ci != (*ri).Line.end(); ci++, c++)
-        cout << c << endl;
+    for (ci = (*ri).Line.begin(); c != Curr_col - 1 && ci != (*ri).Line.end(); ci++, c++);
+        
 }
 //void CurrentFile::DoUndo()
 //{
