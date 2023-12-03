@@ -167,6 +167,7 @@ class CurrentFile
 	 void Print();
 	 void SaveFile();
 	 void LoadFile();
+	 void LoadFile2(string name);
 	 void LoadState(const FileState& S);
 	 void SaveState();
 	 void DoUndo();
@@ -183,5 +184,6 @@ class CurrentFile
 	 void FindFirstAppearance(string name);
 	 void Rearrange();
 	 void RearrangeAll();
+
 };
 

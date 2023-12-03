@@ -2,6 +2,7 @@
 #include"utility_bscs22147_059.h"
 #include"Folder_bscs22147_059.h"
 #include"File_bscs22147_059.h" 
+#include"CurrentFile_bscs22147_059.h"
 #include<vector>
 #include<string>
 #include<ios>
@@ -103,6 +104,46 @@ void DOS::Copy(string cmnd)
 	else
 		cout << "Invalid source Foulder Name.No such Folder exists!" << endl;
 
+}
+void DOS::Edit(string cmnd)
+{
+	string source = cmnd.substr(cmnd.find('\\') + 1, cmnd.find(' ') - 3);
+	string new_name = cmnd.substr(cmnd.find(' ') + 1, cmnd.length());
+	vector<string>src_path = Delimeter(source, '\\');
+	string fname = src_path.back(); src_path.pop_back();
+	Folder* Final_src_Folder = T.getRoot();
+	bool notfound = false;
+	for (int i = 0; i < src_path.size(); i++)
+	{
+		Final_src_Folder = Final_src_Folder->findFolder(src_path[i]);
+		if (!Final_src_Folder)
+		{
+			notfound = true;
+			break;
+		}
+	}
+	if (!notfound)
+	{
+		File* file = Final_src_Folder->findFile(fname);
+		if (file)
+		{
+			string pw;
+			cout << "Enter password\n";
+			getline(cin, pw);
+			if(pw!=file->Password)
+			cout << "Invalid Password" << endl;
+			else
+			{
+				CurrentFile* F{};
+				string name = file->getName() + ".txt";
+				F->LoadFile2(name);				
+			}
+
+		}
+		else cout << "File Not Found!\n";
+
+	}
+	else cout << "File Not Found!\n";
 }
 void DOS::Move(string cmnd)
 {
@@ -263,10 +304,21 @@ bool DOS::Input()
 	}
 	else if (opr == "create")
 	{
-		File* F = new File(command.substr(opr.length() + 1, command.length()), "txt", T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName(), UserName, T.getCurrent(), 0, 0, 0, CurrTime);
+		cout << " Enter new password (spaces not allowed)\n";
+		string pw;
+		getline(cin, pw);
+		File* F = new File(pw,command.substr(opr.length() + 1, command.length()), "txt", T.getCurrent()->getPath() + "\\" + T.getCurrent()->getName(), UserName, T.getCurrent(), 0, 0, 0, CurrTime);
+		string n = command.substr(opr.length() + 1, command.length());
 		T.getCurrent()->addFile(F);
+		n += ".txt";
+		ofstream wtr(n);
+		wtr.open(n);
 		cout << "\n  1 file created successfully\n";
-
+	}
+	else if (opr == "edit")
+	{
+		string cmnd = command.substr(opr.length() + 1, command.length());
+		Edit(cmnd);
 	}
 	else if (opr == "del")
 	{

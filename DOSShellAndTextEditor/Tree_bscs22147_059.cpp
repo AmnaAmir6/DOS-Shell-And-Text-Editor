@@ -34,7 +34,8 @@ void Tree::LoadFolder(Folder* F,ifstream& rdr)
 	{
 		string FN;
 		getline(rdr, FN);
-		File* NewFile = new File(FN,"txt", F->Path + "\\" + F->Name, F->Owner,F,false,0,0,time(0));
+		//password add krna ha
+		File* NewFile = new File("", FN, "txt", F->Path + "\\" + F->Name, F->Owner, F, false, 0, 0, time(0));
 		F->addFile(NewFile);
 	}
 }

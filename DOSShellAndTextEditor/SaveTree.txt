@@ -1,20 +1,7 @@
 V
-2 2
+1 0
 f1
-1 2
-s1
-1 1
-w1
-0 0
-xdr
-abc
-xyz
+1 0
 f2
-1 2
-s4
 0 1
-asdfg
-ttt
-sdfguu
-wqa
-xyz
+df

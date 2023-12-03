@@ -22,7 +22,7 @@ using namespace std;
 void gotoRowCol(int rpos, int cpos);
 void SetClr(int clr);
 void getRowColbyLeftClick(int& rpos, int& cpos);
-void MygetRowColbyLeftClick2(int& rpos, int& cpos);
+void MygetRowColbyLeftClick2(int& rpos, int& cpos, bool& clicked);
 
 
 

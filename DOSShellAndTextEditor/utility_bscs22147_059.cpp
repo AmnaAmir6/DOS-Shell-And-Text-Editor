@@ -42,7 +42,7 @@ void getRowColbyLeftClick(int& rpos, int& cpos)
 	} while (true);
 }
 
-void MygetRowColbyLeftClick2(int& rpos, int& cpos)
+void MygetRowColbyLeftClick2(int& rpos, int& cpos,bool&clicked)
 {
 	//MSG msg{};
 	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
@@ -52,8 +52,8 @@ void MygetRowColbyLeftClick2(int& rpos, int& cpos)
 
 	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000)
 	{
-
 		ReadConsoleInput(hInput, &InputRecord, 1, &Events);
+		clicked = true;
 	}
 
 	if (InputRecord.Event.MouseEvent.dwButtonState == FROM_LEFT_1ST_BUTTON_PRESSED)

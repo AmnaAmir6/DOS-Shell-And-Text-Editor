@@ -463,8 +463,14 @@ void CurrentFile::Insert()
     system("cls");
 	char key = {};
     Print();
+    pos P;
+    bool clicked = false;
     while (true) 
     {
+
+      //  MygetRowColbyLeftClick2(P.ri, P.ci,clicked);
+      
+
         /*
         int rpos; int cpos;
         MygetRowColbyLeftClick2(rpos, cpos);
@@ -475,7 +481,11 @@ void CurrentFile::Insert()
         {
             finding = false;
         }
-
+        if (key == 27)//escape
+        {
+            SaveFile();
+            break;
+        }
         if (key == 13)//enter key
         {
             Lines text_line;
@@ -778,6 +788,8 @@ void CurrentFile::Insert()
         {
             Print();
         }
+        //if (SearchBox->contains(P.ri, P.ci))
+        //    break;
 }
 }
 void CurrentFile::RearrangeAll()
@@ -935,6 +947,72 @@ void CurrentFile::LoadFile()
             break;
         }
     }
+}
+void CurrentFile::LoadFile2(string name)
+{
+    ifstream rdr(name);
+    string CursorIndex;
+    bool empty = true;
+    char c;
+    while (rdr>>c)
+    {
+        empty = false;
+    }
+    if(empty)
+    {
+        CurrentFile* file = new CurrentFile(name);
+        file->Insert();
+        SetClr(0);
+        system("cls");
+        SetClr(15);
+
+    }
+    else
+    {
+
+        getline(rdr, CursorIndex);
+        Curr_row = stoi(CursorIndex.substr(0, CursorIndex.find(' ')));
+        Curr_col = stoi(CursorIndex.substr(CursorIndex.find(' ') + 1, CursorIndex.length()));
+
+        string LineText;
+        while (getline(rdr, LineText))
+        {
+            for (int i = 0; i < LineText.length(); i++)
+            {
+                if ((*ri).Line.size() == 1 && (*ci) == ' ')
+                {
+                    *ci = LineText[i];
+                }
+                else
+                {
+                    (*ri).Line.push_back(LineText[i]);
+                    ci++;
+                }
+            }
+            text.push_back(Lines());
+            ri++;
+            ci = (*ri).Line.begin();
+        }
+
+        int cri = 0, cci = 0;
+        for (auto row = text.begin(); row != text.end(); row++, cri++)
+        {
+            if (cri == Curr_row)
+            {
+                ri = row;
+                break;
+            }
+        }
+        for (auto col = (*ri).Line.begin(); col != (*ri).Line.end(); col++, cci++)
+        {
+            if (cci == Curr_col)
+            {
+                ci = col;
+                break;
+            }
+        }
+    }
+   
 }
 void CurrentFile::SaveState()
 {
