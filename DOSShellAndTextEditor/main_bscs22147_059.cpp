@@ -10,7 +10,7 @@
 #include"DOS_bscs22147_059.h"
 #include"CurrentFile_bscs22147_059.h"
 using namespace std;
-int main()
+int main1()
 {
     DOS D;
     D.play();
@@ -86,7 +86,7 @@ int main44()
     return 0;
 }
 
-int main123()
+int main()
 {
     /*char ch;
     	while (true)
@@ -101,7 +101,8 @@ int main123()
     			}
     		}
     	}*/
-    CurrentFile* file= new CurrentFile("file1.txt");
+    CurrentFile* file= new CurrentFile("file.txt");
+	file->LoadFile();
     file->Insert();    
     /*for (int i = 0; i < 255; i++)
     {

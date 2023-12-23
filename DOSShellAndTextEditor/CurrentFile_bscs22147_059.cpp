@@ -5,6 +5,7 @@
 #include<conio.h>
 #include<string>
 #include<stack>
+#include<unordered_map>
 
 CurrentFile::CurrentFile(string FileName)
 {
@@ -523,7 +524,11 @@ void CurrentFile::Insert()
         }
         else if (key == 19) 
         { // Ctrl + S
-            SaveFile();
+           SaveFile();
+        }
+        else if (key == 23)
+        { // Ctrl + W
+            WordGame();
         }
         else if (key == 15)
         { // Ctrl + O
@@ -1572,3 +1577,133 @@ void CurrentFile::FindandReplace(string word, string RP_word)
     FindWords(RP_word);
     HighlightWords(RP_word, changes_made);
 }
+
+void CurrentFile::WordGame()
+{
+    unordered_map<string, bool> Dictionary;
+    ifstream rdr("dictionary.txt");
+
+    string Line;
+    while (getline(rdr, Line))
+    {
+        Dictionary[Line] = true;
+    }
+
+    string temp = "";
+    unordered_map<string, unordered_map<char, int>>Map;
+
+    for (auto ri = text.begin(); ri != text.end(); ri++)
+    {
+        for (auto ci = (*ri).Line.begin(); ci != (*ri).Line.end(); ci++)
+        {
+            if (*ci != ' ' && *ci != '.' && *ci != ',')
+            {
+                temp += tolower(*ci);
+            }
+            else
+            {
+                auto x = Dictionary.find(temp);
+                if (x != Dictionary.end())
+                {
+                    unordered_map<char, int>frequency;
+                    for (int i = 0; i < temp.length(); i++)
+                    {
+                        frequency[temp[i]]++;
+                    }
+                    Map[temp] = frequency;
+                }
+                temp = "";
+            }
+        }
+        auto x = Dictionary.find(temp);
+        if (x != Dictionary.end())
+        {
+            unordered_map<char, int>frequency;
+            for (int i = 0; i < temp.length(); i++)
+            {
+                frequency[temp[i]]++;
+            }
+            Map[temp] = frequency;
+        }
+        temp = "";
+    }
+    int maxCount = 0;
+    string Res;
+    bool found = true;
+    for (auto j = Map.begin(); j != Map.end(); j++)
+    {
+        unordered_map<char, int>frequency = j->second;
+        int count = 0;
+        for (auto i = Map.begin(); i != Map.end(); i++)
+        {
+            if (i->first == j->first)
+                continue;
+            found = true;
+            unordered_map<char, int> Temp=i->second;
+           
+            for (auto x = Temp.begin(); x != Temp.end(); x++)
+            {
+                auto itr = frequency.find(x->first);
+                if ((itr == frequency.end()) || itr->second < x->second)
+                {
+                    found = false;
+                    break;
+                }
+            }
+            if (!found)
+                continue;
+            auto w = Dictionary.find(i->first);
+            if (w != Dictionary.end())
+            {
+                count++;
+            }
+        }
+        if (count > maxCount)
+        {
+            maxCount = count;
+            Res = j->first;
+        }
+    }
+    pos P = SearchBox->GetPOsition();
+    gotoRowCol(P.ri, P.ci + 1);
+    SetClr(15);
+    cout << Res;
+    Sleep(100);
+}
+//for (int j = 0; j < Vs.size(); j++)
+//{
+//    unordered_map<char, int>frequency;
+//    for (int i = 0; i < Vs[j].length(); i++)
+//    {
+//        frequency[Vs[j][i]]++;
+//    }
+//    for (int i = 0; i < Vs.size(); i++)
+//    {
+//        if (i == j)
+//            continue;
+//        found = true;
+//        unordered_map<char, int> Temp;
+//        for (int x = 0; x < Vs[i].size(); x++)
+//        {
+//            Temp[Vs[i][x]]++;
+//        }
+//        for (auto x = Temp.begin(); x != Temp.end(); x++)
+//        {
+//            auto itr = frequency.find(x->first);
+//            if ((itr == frequency.end()) || itr->second < x->second)
+//            {
+//                found = false;
+//                break;
+//            }
+//        }
+//        if (!found)
+//            continue;
+//        auto w = Dictionary.find(Vs[i]);
+//        if (w != Dictionary.end())
+//            Res.push_back(Vs[i]);
+//    }
+//}
+//for (int i = 0; i < Res.size(); i++)
+//{
+//    cout << Res[i] << endl;
+//}

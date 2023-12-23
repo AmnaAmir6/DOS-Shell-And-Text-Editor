@@ -184,6 +184,7 @@ class CurrentFile
 	 void FindFirstAppearance(string name);
 	 void Rearrange();
 	 void RearrangeAll();
+	 void WordGame();
 
 };
 
